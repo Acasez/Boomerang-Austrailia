@@ -4,7 +4,6 @@ import CardMarker from "./CardMarker";
 type MarkerSymbol = Collection | Animal | Activity;
 
 const MARKER_KEYS = ["collection", "animal", "activity"] as const;
-type MarkerKey = (typeof MARKER_KEYS)[number];
 
 interface CardProps {
   card: Card;

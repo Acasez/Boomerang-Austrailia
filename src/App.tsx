@@ -1,24 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import CardComponent from "./Components/CardComponent";
 import "./index.css";
 import type { Card } from "./Types/Card";
-import cards from "./Data/cards";
+import CardDisplay from "./Components/CardDisplay";
 
 type ChatMessage = { senderId: number; text: string };
-
-function randomCard(): Card {
-  const card = cards[Math.floor(Math.random() * cards.length)];
-  if (!card) {
-    throw new Error("Cannot select a card from an empty deck.");
-  }
-  return card;
-}
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [myId, setMyId] = useState<number | null>(null);
-  const [card, setCard] = useState<Card>(randomCard);
   const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
@@ -29,7 +19,6 @@ export default function App() {
       const data = JSON.parse(event.data);
       if (data.type === "welcome") setMyId(data.playerId);
       if (data.type === "chat") setMessages((prev) => [...prev, data]);
-      if (data.type === "deal") setCard(data.card as Card);
     };
 
     return () => ws.close();
@@ -39,8 +28,6 @@ export default function App() {
     wsRef.current?.send(input);
     setInput("");
   };
-
-  const deal = () => setCard(randomCard());
 
   return (
     <div className="max-w-7xl mx-auto p-8 text-center">
@@ -66,13 +53,7 @@ export default function App() {
           Send
         </button>
       </div>
-      <button
-        className="p-2 border-2 border-blue-600 bg-blue-300 rounded-2xl mb-2"
-        onClick={deal}
-      >
-        Deal random card
-      </button>
-      <CardComponent card={card} />
+      <CardDisplay />
     </div>
   );
 }
