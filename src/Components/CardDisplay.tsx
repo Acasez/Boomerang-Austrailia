@@ -20,7 +20,7 @@ export default function CardDisplay({}: CardMarkerProps) {
     <div>
       {" "}
       <button
-        className="p-2 border-2 border-blue-600 bg-blue-300 rounded-2xl mb-2"
+        className="p-2 border-2 border-blue-600 bg-blue-400 rounded-2xl mb-2"
         onClick={deal}
       >
         Deal random card
