@@ -1,11 +1,13 @@
-export type Card = {
+type CardTraits =
+  | { collection: Collection; animal: Animal; activity?: undefined }
+  | { collection: Collection; activity: Activity; animal?: undefined }
+  | { animal: Animal; activity: Activity; collection?: undefined };
+
+export type Card = CardTraits & {
   name: string;
   site: string;
   region: Region;
   throwValue: number;
-  collection?: Collection;
-  animal?: Animal;
-  Activity?: Activity;
 };
 
 export type Region =

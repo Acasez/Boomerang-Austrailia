@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import CardComponent from "./CardComponent";
+import CardComponent from "./Components/CardComponent";
 import "./index.css";
 import type { Card } from "./Types/Card";
 
@@ -34,6 +34,8 @@ export default function App() {
     site: "E",
     region: "Northern Territory",
     throwValue: 4,
+    animal: "Kangaroos",
+    activity: "Culture",
   };
 
   return (
