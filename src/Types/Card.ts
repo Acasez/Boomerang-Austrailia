@@ -1,4 +1,4 @@
-export type Action = {
+export type Card = {
   name: string;
   site: string;
   region: Region;

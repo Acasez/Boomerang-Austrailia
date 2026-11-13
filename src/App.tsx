@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import Card from "./Card";
+import CardComponent from "./CardComponent";
 import "./index.css";
+import type { Card } from "./Types/Card";
 
 type ChatMessage = { senderId: number; text: string };
 
@@ -28,6 +29,13 @@ export default function App() {
     setInput("");
   };
 
+  const UluruCard: Card = {
+    name: "Uluru",
+    site: "E",
+    region: "Northern Territory",
+    throwValue: 4,
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-8 text-center">
       <h1 className="text-3xl font-bold mb-4 text-green-400">Chat test</h1>
@@ -52,7 +60,7 @@ export default function App() {
           Send
         </button>
       </div>
-      <Card name={"The Bungle Bungles"} text="Western Australia" />
+      <CardComponent card={UluruCard} />
     </div>
   );
 }
