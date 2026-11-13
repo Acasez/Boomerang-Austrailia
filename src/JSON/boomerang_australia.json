@@ -3,7 +3,7 @@
         "name": "The Bungle Bungles",
         "site": "A",
         "region": "Western Australia",
-        "#": "1",
+        "throwValue": "1",
         "collection": "Leaves",
         "animal": "",
         "activity": "Indigenous Culture"
@@ -12,7 +12,7 @@
         "name": "The Pinnacles",
         "site": "B",
         "region": "Western Australia",
-        "#": "1",
+        "throwValue": "1",
         "collection": "",
         "animal": "Kangaroos",
         "activity": "Sightseeing"
@@ -21,7 +21,7 @@
         "name": "Margaret River",
         "site": "C",
         "region": "Western Australia",
-        "#": "1",
+        "throwValue": "1",
         "collection": "Shells",
         "animal": "Kangaroos",
         "activity": ""
@@ -30,7 +30,7 @@
         "name": "Kalbarri National Park",
         "site": "D",
         "region": "Western Australia",
-        "#": "1",
+        "throwValue": "1",
         "collection": "Wildflowers",
         "animal": "",
         "activity": "Bushwalking"
@@ -39,7 +39,7 @@
         "name": "Uluru",
         "site": "E",
         "region": "Northern Territory",
-        "#": "4",
+        "throwValue": "4",
         "collection": "",
         "animal": "Emus",
         "activity": "Indigenous Culture"
@@ -48,7 +48,7 @@
         "name": "Kakadu National Park",
         "site": "F",
         "region": "Northern Territory",
-        "#": "4",
+        "throwValue": "4",
         "collection": "",
         "animal": "Wombats",
         "activity": "Sightseeing"
@@ -57,7 +57,7 @@
         "name": "Nitmiluk National Park",
         "site": "G",
         "region": "Northern Territory",
-        "#": "4",
+        "throwValue": "4",
         "collection": "Shells",
         "animal": "Platypuses",
         "activity": ""
@@ -66,7 +66,7 @@
         "name": "King's Canyon",
         "site": "H",
         "region": "Northern Territory",
-        "#": "4",
+        "throwValue": "4",
         "collection": "",
         "animal": "Koalas",
         "activity": "Swimming"
@@ -75,7 +75,7 @@
         "name": "The Great Barrier Reef",
         "site": "I",
         "region": "Queensland",
-        "#": "6",
+        "throwValue": "6",
         "collection": "Wildflowers",
         "animal": "",
         "activity": "Sightseeing"
@@ -84,7 +84,7 @@
         "name": "The Whitsundays",
         "site": "J",
         "region": "Queensland",
-        "#": "6",
+        "throwValue": "6",
         "collection": "",
         "animal": "Kangaroos",
         "activity": "Indigenous Culture"
@@ -93,7 +93,7 @@
         "name": "Daintree Rainforest",
         "site": "K",
         "region": "Queensland",
-        "#": "6",
+        "throwValue": "6",
         "collection": "Souvenirs",
         "animal": "",
         "activity": "Bushwalking"
@@ -102,7 +102,7 @@
         "name": "Surfers Paradise",
         "site": "L",
         "region": "Queensland",
-        "#": "6",
+        "throwValue": "6",
         "collection": "Wildflowers",
         "animal": "",
         "activity": "Swimming"
@@ -111,7 +111,7 @@
         "name": "Barossa Valley",
         "site": "M",
         "region": "South Australia",
-        "#": "3",
+        "throwValue": "3",
         "collection": "",
         "animal": "Koalas",
         "activity": "Bushwalking"
@@ -120,7 +120,7 @@
         "name": "Lake Eyre",
         "site": "N",
         "region": "South Australia",
-        "#": "3",
+        "throwValue": "3",
         "collection": "",
         "animal": "Emus",
         "activity": "Swimming"
@@ -129,7 +129,7 @@
         "name": "Kangaroo Island",
         "site": "O",
         "region": "South Australia",
-        "#": "3",
+        "throwValue": "3",
         "collection": "",
         "animal": "Kangaroos",
         "activity": "Bushwalking"
@@ -138,7 +138,7 @@
         "name": "Mount Gambier",
         "site": "P",
         "region": "South Australia",
-        "#": "3",
+        "throwValue": "3",
         "collection": "Wildflowers",
         "animal": "",
         "activity": "Sightseeing"
@@ -146,8 +146,8 @@
     {
         "name": "Blue Mountains",
         "site": "Q",
-        "region": "New South Whales",
-        "#": "5",
+        "region": "New South Wales",
+        "throwValue": "5",
         "collection": "",
         "animal": "Wombats",
         "activity": "Indigenous Culture"
@@ -155,8 +155,8 @@
     {
         "name": "Sydney Harbour",
         "site": "R",
-        "region": "New South Whales",
-        "#": "5",
+        "region": "New South Wales",
+        "throwValue": "5",
         "collection": "",
         "animal": "Emus",
         "activity": "Sightseeing"
@@ -164,8 +164,8 @@
     {
         "name": "Bondi Beach",
         "site": "S",
-        "region": "New South Whales",
-        "#": "5",
+        "region": "New South Wales",
+        "throwValue": "5",
         "collection": "",
         "animal": "Wombats",
         "activity": "Swimming"
@@ -173,8 +173,8 @@
     {
         "name": "Hunter Valley",
         "site": "T",
-        "region": "New South Whales",
-        "#": "5",
+        "region": "New South Wales",
+        "throwValue": "5",
         "collection": "",
         "animal": "Emus",
         "activity": "Bushwalking"
@@ -183,7 +183,7 @@
         "name": "Melbourne",
         "site": "U",
         "region": "Victoria",
-        "#": "2",
+        "throwValue": "2",
         "collection": "",
         "animal": "Wombats",
         "activity": "Bushwalking"
@@ -192,7 +192,7 @@
         "name": "The MCG",
         "site": "V",
         "region": "Victoria",
-        "#": "2",
+        "throwValue": "2",
         "collection": "Leaves",
         "animal": "",
         "activity": "Indigenous Culture"
@@ -201,7 +201,7 @@
         "name": "Twelve Apostles",
         "site": "X",
         "region": "Victoria",
-        "#": "2",
+        "throwValue": "2",
         "collection": "Shells",
         "animal": "",
         "activity": "Swimming"
@@ -210,7 +210,7 @@
         "name": "Royal Exhibition Building",
         "site": "Y",
         "region": "Victoria",
-        "#": "2",
+        "throwValue": "2",
         "collection": "Leaves",
         "animal": "Platypuses",
         "activity": ""
@@ -219,7 +219,7 @@
         "name": "Salamanca Markets",
         "site": "Z",
         "region": "Tasmania",
-        "#": "7",
+        "throwValue": "7",
         "collection": "Leaves",
         "animal": "Emus",
         "activity": ""
@@ -228,7 +228,7 @@
         "name": "Mount Wellington",
         "site": "Å",
         "region": "Tasmania",
-        "#": "7",
+        "throwValue": "7",
         "collection": "",
         "animal": "Koalas",
         "activity": "Sightseeing"
@@ -237,7 +237,7 @@
         "name": "Port Arthur",
         "site": "Ä",
         "region": "Tasmania",
-        "#": "7",
+        "throwValue": "7",
         "collection": "Leaves",
         "animal": "",
         "activity": "Indigenous Culture"
@@ -246,7 +246,7 @@
         "name": "Richmond",
         "site": "Ö",
         "region": "Tasmania",
-        "#": "7",
+        "throwValue": "7",
         "collection": "",
         "animal": "Kangaroos",
         "activity": "Swimming"

@@ -19,8 +19,32 @@ export type Region =
   | "Victoria"
   | "Tasmania";
 
-export type Activity = "Swimming" | "Bush-walking" | "Culture" | "Sightseeing";
+export type Activity =
+  | "Swimming"
+  | "Bushwalking"
+  | "Indigenous Culture"
+  | "Sightseeing";
 
-export type Animal = "Kangaroos" | "Emus" | "Wombats" | "Koalas" | "Platypus";
+export type Animal = "Kangaroos" | "Emus" | "Wombats" | "Koalas" | "Platypuses";
 
-export type Collection = "Leaves" | "Wildflower" | "Shells" | "Souvenirs";
+export type Collection = "Leaves" | "Wildflowers" | "Shells" | "Souvenirs";
+
+export const COLLECTIONS = [
+  "Leaves",
+  "Wildflowers",
+  "Shells",
+  "Souvenirs",
+] as const;
+export const ANIMALS = [
+  "Kangaroos",
+  "Emus",
+  "Wombats",
+  "Koalas",
+  "Platypuses",
+] as const;
+export const ACTIVITIES = [
+  "Swimming",
+  "Bushwalking",
+  "Indigenous Culture",
+  "Sightseeing",
+] as const;

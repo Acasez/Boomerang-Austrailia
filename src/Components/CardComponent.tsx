@@ -36,7 +36,7 @@ export default function CardComponent({ card }: CardProps) {
       </div>
       <div className="flex flex-col flex-10 justify-end m-2 mb-5">
         <div className="bg-amber-300 rounded-2xl mr-4">
-          <h1 className="text-4xl align-middle font-bold">{card.name}</h1>
+          <h1 className="text-3xl align-middle font-bold">{card.name}</h1>
           <p>{card.region}</p>
         </div>
       </div>
