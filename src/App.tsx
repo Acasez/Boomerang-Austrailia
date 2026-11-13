@@ -1,12 +1,14 @@
 import { APITester } from "./APITester";
+import Card from "./Card";
 import "./index.css";
 
 import logo from "./logo.svg";
 import reactLogo from "./react.svg";
 
-export function App() {
+export default function App() {
   return (
     <div className="max-w-7xl mx-auto p-8 text-center relative z-10">
+      <Card name={"The Bungle Bungles"} text="Western Australia" />
       <div className="flex justify-center items-center gap-8 mb-8">
         <img
           src={logo}
@@ -20,7 +22,9 @@ export function App() {
         />
       </div>
 
-      <h1 className="text-5xl font-bold my-4 leading-tight">Bun + React</h1>
+      <h1 className="text-5xl font-bold my-4 leading-tight">
+        Bun + React + Cards
+      </h1>
       <p>
         Edit{" "}
         <code className="bg-[#1a1a1a] px-2 py-1 rounded font-mono">
@@ -32,5 +36,3 @@ export function App() {
     </div>
   );
 }
-
-export default App;
