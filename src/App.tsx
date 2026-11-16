@@ -163,7 +163,7 @@ export default function App() {
         disabled={myId === null}
         onStartGame={startGame}
       />
-      <div className="mx-auto p-3 text-center bg-gray-100">
+      <div className="mx-auto p-3 pt-1 text-center bg-gray-100">
         <div className="flex flex-row gap-5">
           <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
           <HandDisplay

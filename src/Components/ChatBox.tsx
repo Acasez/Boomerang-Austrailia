@@ -17,7 +17,7 @@ export default function ChatBox({ wsRef, messages, myId }: ChatBoxProps) {
 
   return (
     <div className="max-w-90">
-      <h1 className="text-3xl font-bold mb-4 text-green-400">
+      <h1 className="text-3xl font-bold mb-4 text-green-400 bg-gray-200 p-2 rounded-2xl">
         Chat {myId !== null && `(You are player ${myId})`}
       </h1>
       <div className="border p-4 mb-4 text-left h-64 overflow-y-auto">
