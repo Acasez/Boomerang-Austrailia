@@ -1,4 +1,3 @@
-import type { Card } from "@/Types/Card";
 import CardComponent from "./CardComponent";
 import { useState } from "react";
 import Game from "../classes/Game";

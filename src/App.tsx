@@ -3,6 +3,7 @@ import "./index.css";
 import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
+import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -31,7 +32,10 @@ export default function App() {
 
   return (
     <div className="mx-auto p-8 text-center bg-gray-100">
-      <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
+      <div>
+        <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
+        <PlayedCardDisplay />
+      </div>
       <HandDisplay />
     </div>
   );
