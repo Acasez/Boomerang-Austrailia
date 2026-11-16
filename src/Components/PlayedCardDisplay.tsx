@@ -1,18 +1,21 @@
 import CardComponent from "./CardComponent";
-import type Player from "@/classes/Player";
+import type { Card } from "@/Types/Card";
 
 interface PlayedCardDisplayProps {
-  player: Player;
+  cards: Card[];
 }
 
-export default function PlayedCardDisplay({
-  player,
-}: PlayedCardDisplayProps) {
+export default function PlayedCardDisplay({ cards }: PlayedCardDisplayProps) {
   return (
-    <div>
+    <div className="bg-green-200 rounded-xl p-3">
+      <h1 className="text-2xl underline mb-2">Played this round</h1>
       <div className="flex flex-wrap gap-4">
-        {player.currentPlays.map((card, index) => (
-          <CardComponent key={`${card.name}-${index}`} card={card} />
+        {cards.map((card, index) => (
+          <CardComponent
+            key={`${card.name}-${index}`}
+            card={card}
+            selected={false}
+          />
         ))}
       </div>
     </div>

@@ -6,13 +6,51 @@ const clients = new Map<ServerWebSocket, { id: number; player: Player }>();
 const game = new Game();
 let nextPlayerId = 1;
 
-function isStartGameMessage(value: unknown): boolean {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "type" in value &&
-    value.type === "startGame"
-  );
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isMessageType(
+  value: unknown,
+  type: string,
+): value is Record<string, unknown> {
+  return isRecord(value) && value.type === type;
+}
+
+function broadcastSelectionProgress(): void {
+  const readyCount = game.activePlayers.filter(
+    (player) => player.selectedCard !== null,
+  ).length;
+  const payload = JSON.stringify({
+    type: "selectionProgress",
+    readyCount,
+    playerCount: game.activePlayers.length,
+  });
+
+  for (const [clientSocket, client] of clients) {
+    if (game.activePlayers.includes(client.player)) {
+      clientSocket.send(payload);
+    }
+  }
+}
+
+function broadcastResolvedRound(): void {
+  const gameOver = game.activePlayers.every((player) => player.hand.length === 0);
+
+  for (const [clientSocket, client] of clients) {
+    if (!game.activePlayers.includes(client.player)) continue;
+
+    clientSocket.send(
+      JSON.stringify({
+        type: "roundResolved",
+        hand: client.player.hand,
+        currentPlays: client.player.currentPlays,
+        playedCards: game.lastPlayedCards,
+        roundNumber: game.roundNumber,
+        gameOver,
+      }),
+    );
+  }
 }
 
 Bun.serve({
@@ -49,7 +87,7 @@ Bun.serve({
         request = null;
       }
 
-      if (isStartGameMessage(request)) {
+      if (isMessageType(request, "startGame")) {
         try {
           game.startGame();
         } catch (error) {
@@ -69,6 +107,34 @@ Bun.serve({
         return;
       }
 
+      if (isMessageType(request, "selectCard")) {
+        const handIndex = request.handIndex;
+        if (typeof handIndex !== "number" || !Number.isInteger(handIndex)) {
+          ws.send(
+            JSON.stringify({
+              type: "selectionError",
+              message: "The selected hand index is invalid.",
+            }),
+          );
+          return;
+        }
+
+        try {
+          const playedCards = game.selectCard(client.player, handIndex);
+          if (playedCards) {
+            broadcastResolvedRound();
+          } else {
+            broadcastSelectionProgress();
+          }
+        } catch (error) {
+          if (!(error instanceof Error)) throw error;
+          ws.send(
+            JSON.stringify({ type: "selectionError", message: error.message }),
+          );
+        }
+        return;
+      }
+
       const payload = JSON.stringify({
         type: "chat",
         senderId: client.id,
@@ -83,7 +149,12 @@ Bun.serve({
       if (!client) return;
 
       clients.delete(ws);
-      game.removePlayer(client.player);
+      const playedCards = game.removePlayer(client.player);
+      if (playedCards) {
+        broadcastResolvedRound();
+      } else {
+        broadcastSelectionProgress();
+      }
       console.log(`Player ${client.id} disconnected`);
     },
   },

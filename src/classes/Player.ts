@@ -7,6 +7,7 @@ export default class Player {
 
   currentPlays: Card[] = [];
   hand: Card[] = [];
+  selectedCard: Card | null = null;
 
   drawCard(deck: Card[]): void {
     if (this.hand.length < HAND_SIZE) {
@@ -14,18 +15,22 @@ export default class Player {
     }
   }
 
-  playCard(card: Card): void {
-    const cardIndex = this.hand.indexOf(card);
-    if (cardIndex === -1) {
-      throw new Error("Cannot play a card that is not in the player's hand.");
+  selectCard(card: Card): void {
+    if (!this.hand.includes(card)) {
+      throw new Error("Cannot select a card that is not in the player's hand.");
     }
 
-    this.currentPlays.push(...this.hand.splice(cardIndex, 1));
+    if (this.selectedCard !== null) {
+      throw new Error("This player has already selected a card.");
+    }
+
+    this.selectedCard = card;
   }
 
   reset(): void {
     this.score = 0;
     this.currentPlays = [];
     this.hand = [];
+    this.selectedCard = null;
   }
 }

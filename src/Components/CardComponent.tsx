@@ -7,7 +7,8 @@ const MARKER_KEYS = ["collection", "animal", "activity"] as const;
 
 interface CardProps {
   card: Card;
-  onPlay?: (card: Card) => void;
+  onSelect?: () => void;
+  selected: boolean;
 }
 
 function getMarkers(card: Card): MarkerSymbol[] {
@@ -16,13 +17,13 @@ function getMarkers(card: Card): MarkerSymbol[] {
   );
 }
 
-export default function CardComponent({ card, onPlay }: CardProps) {
+export default function CardComponent({ card, onSelect, selected }: CardProps) {
   return (
     <button
       type="button"
-      className="w-60 h-80 rounded-2xl bg-amber-300 text-white flex flex-row"
-      onClick={() => onPlay?.(card)}
-      disabled={!onPlay}
+      className={`w-60 h-80 rounded-2xl bg-amber-300 text-white flex flex-row ${selected ? "-mb-10 ring-4 ring-blue-600" : ""}`}
+      onClick={onSelect}
+      disabled={!onSelect}
     >
       <div className="flex flex-col flex-1 justify-between m-4">
         <div className="border-2 border-red-700 rounded-4xl bg-white text-red-700 text-2xl w-10 text-center">

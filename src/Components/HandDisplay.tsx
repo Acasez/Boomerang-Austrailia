@@ -1,28 +1,31 @@
 import CardComponent from "./CardComponent";
 import type Player from "@/classes/Player";
-import type { Card } from "@/Types/Card";
 
 interface HandDisplayProps {
   player: Player;
-  onStateChange: () => void;
+  onSelectCard: (handIndex: number) => void;
   gameStarted: boolean;
   hasHand: boolean;
+  gameOver: boolean;
+  selectionProgress: { readyCount: number; playerCount: number } | null;
 }
 
 export default function HandDisplay({
   player,
-  onStateChange,
+  onSelectCard,
   gameStarted,
   hasHand,
+  gameOver,
+  selectionProgress,
 }: HandDisplayProps) {
-  const playCard = (card: Card) => {
-    player.playCard(card);
-    onStateChange();
-  };
-
+  const canSelect =
+    gameStarted &&
+    hasHand &&
+    !gameOver &&
+    player.selectedCard === null;
   return (
     <div className="bg-blue-200 rounded-xl p-3">
-      <h1 className="text-2xl underline mb-2">Hand</h1>
+      <h1 className="text-2xl underline mb-8">Hand</h1>
       {!hasHand && (
         <p>
           {gameStarted
@@ -30,12 +33,23 @@ export default function HandDisplay({
             : "Start the game to be dealt cards."}
         </p>
       )}
+      {player.selectedCard && (
+        <p>Card selected. Waiting for the other players.</p>
+      )}
+      {selectionProgress && (
+        <p>
+          Waiting for players: {selectionProgress.readyCount}/
+          {selectionProgress.playerCount} selected.
+        </p>
+      )}
+      {gameOver && <p>All cards have been played. Restart to play again.</p>}
       <div className="flex flex-wrap gap-4 ">
         {player.hand.map((card, index) => (
           <CardComponent
             key={`${card.name}-${index}`}
             card={card}
-            onPlay={playCard}
+            onSelect={canSelect ? () => onSelectCard(index) : undefined}
+            selected={player.selectedCard === card}
           />
         ))}
       </div>
