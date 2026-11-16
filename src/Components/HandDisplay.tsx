@@ -19,13 +19,10 @@ export default function HandDisplay({
   selectionProgress,
 }: HandDisplayProps) {
   const canSelect =
-    gameStarted &&
-    hasHand &&
-    !gameOver &&
-    player.selectedCard === null;
+    gameStarted && hasHand && !gameOver && player.selectedCard === null;
   return (
     <div className="bg-blue-200 rounded-xl p-3">
-      <h1 className="text-2xl underline mb-8">Hand</h1>
+      <h1 className="text-2xl underline">Hand</h1>
       {!hasHand && (
         <p>
           {gameStarted
@@ -43,7 +40,7 @@ export default function HandDisplay({
         </p>
       )}
       {gameOver && <p>All cards have been played. Restart to play again.</p>}
-      <div className="flex flex-wrap gap-4 ">
+      <div className="flex flex-wrap gap-4 mt-5">
         {player.hand.map((card, index) => (
           <CardComponent
             key={`${card.name}-${index}`}
