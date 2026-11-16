@@ -10,7 +10,6 @@ export default class Game {
 
   players: Player[] = [];
   activePlayers: Player[] = [];
-  lastPlayedCards: Card[] = [];
   roundNumber = 0;
 
   started = false;
@@ -47,7 +46,6 @@ export default class Game {
     this.discardPile = [];
     this.setupHands(this.deck);
     this.activePlayers = [...this.players];
-    this.lastPlayedCards = [];
     this.roundNumber = 0;
     this.started = true;
   }
@@ -127,7 +125,6 @@ export default class Game {
       nextPlayer.hand = hand;
     }
 
-    this.lastPlayedCards = playedCards;
     this.roundNumber++;
     return playedCards;
   }

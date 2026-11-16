@@ -40,7 +40,7 @@ export default function HandDisplay({
         </p>
       )}
       {gameOver && <p>All cards have been played. Restart to play again.</p>}
-      <div className="flex flex-wrap gap-4 mt-5">
+      <div className="flex flex-wrap gap-1 mt-5">
         {player.hand.map((card, index) => (
           <CardComponent
             key={`${card.name}-${index}`}

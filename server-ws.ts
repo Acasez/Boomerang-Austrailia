@@ -34,8 +34,25 @@ function broadcastSelectionProgress(): void {
   }
 }
 
+function getPlayedRows(): { playerId: number; cards: Player["currentPlays"] }[] {
+  return game.activePlayers.map((player) => {
+    const connectedClient = Array.from(clients.values()).find(
+      (client) => client.player === player,
+    );
+    if (!connectedClient) {
+      throw new Error("An active player has no connected client.");
+    }
+
+    return {
+      playerId: connectedClient.id,
+      cards: player.currentPlays,
+    };
+  });
+}
+
 function broadcastResolvedRound(): void {
   const gameOver = game.activePlayers.every((player) => player.hand.length === 0);
+  const playedRows = getPlayedRows();
 
   for (const [clientSocket, client] of clients) {
     if (!game.activePlayers.includes(client.player)) continue;
@@ -45,7 +62,7 @@ function broadcastResolvedRound(): void {
         type: "roundResolved",
         hand: client.player.hand,
         currentPlays: client.player.currentPlays,
-        playedCards: game.lastPlayedCards,
+        playedRows,
         roundNumber: game.roundNumber,
         gameOver,
       }),
@@ -101,6 +118,7 @@ Bun.serve({
             JSON.stringify({
               type: "gameStarted",
               hand: connectedClient.player.hand,
+              playedRows: getPlayedRows(),
             }),
           );
         }

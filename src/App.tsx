@@ -8,6 +8,11 @@ import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 import Player from "./classes/Player";
 import Header from "./Components/Header";
 
+interface PlayedCardsRow {
+  playerId: number;
+  cards: Card[];
+}
+
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [myId, setMyId] = useState<number | null>(null);
@@ -19,7 +24,7 @@ export default function App() {
   const [gameStarted, setGameStarted] = useState(false);
   const [hasHand, setHasHand] = useState(false);
   const [gameOver, setGameOver] = useState(false);
-  const [playedCards, setPlayedCards] = useState<Card[]>([]);
+  const [playedRows, setPlayedRows] = useState<PlayedCardsRow[]>([]);
   const [selectionProgress, setSelectionProgress] = useState<{
     readyCount: number;
     playerCount: number;
@@ -43,13 +48,14 @@ export default function App() {
         setGameStarted(Boolean(data.gameStarted));
         setHasHand(false);
         setGameOver(false);
-        setPlayedCards([]);
+        setPlayedRows([]);
         setSelectionProgress(null);
         setGameError(null);
       }
       if (data.type === "gameStarted") {
-        if (!Array.isArray(data.hand)) {
-          const error = "Game start message did not include a valid hand.";
+        if (!Array.isArray(data.hand) || !Array.isArray(data.playedRows)) {
+          const error =
+            "Game start message did not include a valid hand and played-card rows.";
           console.error(error);
           setGameError(error);
           return;
@@ -61,7 +67,7 @@ export default function App() {
         setGameStarted(true);
         setHasHand(true);
         setGameOver(false);
-        setPlayedCards([]);
+        setPlayedRows(data.playedRows);
         setSelectionProgress(null);
         setGameError(null);
       }
@@ -83,7 +89,7 @@ export default function App() {
         if (
           !Array.isArray(data.hand) ||
           !Array.isArray(data.currentPlays) ||
-          !Array.isArray(data.playedCards)
+          !Array.isArray(data.playedRows)
         ) {
           setGameError("Server sent invalid draft results.");
           return;
@@ -94,7 +100,7 @@ export default function App() {
         player.currentPlays = data.currentPlays;
         setPlayerState({ player });
         setHasHand(true);
-        setPlayedCards(data.playedCards);
+        setPlayedRows(data.playedRows);
         setSelectionProgress(null);
         setGameOver(Boolean(data.gameOver));
         setGameError(null);
@@ -157,20 +163,20 @@ export default function App() {
         disabled={myId === null}
         onStartGame={startGame}
       />
-      <div className="mx-auto p-8 text-center bg-gray-100">
+      <div className="mx-auto p-3 text-center bg-gray-100">
         <div className="flex flex-row gap-5">
           <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
-          <PlayedCardDisplay cards={playedCards} />
+          <HandDisplay
+            player={playerState.player}
+            onSelectCard={selectCard}
+            gameStarted={gameStarted}
+            hasHand={hasHand}
+            gameOver={gameOver}
+            selectionProgress={selectionProgress}
+          />
         </div>
         {gameError && <p role="alert">{gameError}</p>}
-        <HandDisplay
-          player={playerState.player}
-          onSelectCard={selectCard}
-          gameStarted={gameStarted}
-          hasHand={hasHand}
-          gameOver={gameOver}
-          selectionProgress={selectionProgress}
-        />
+        <PlayedCardDisplay rows={playedRows} />
       </div>
     </>
   );
