@@ -28,23 +28,3 @@ export type Activity =
 export type Animal = "Kangaroos" | "Emus" | "Wombats" | "Koalas" | "Platypuses";
 
 export type Collection = "Leaves" | "Wildflowers" | "Shells" | "Souvenirs";
-
-export const COLLECTIONS = [
-  "Leaves",
-  "Wildflowers",
-  "Shells",
-  "Souvenirs",
-] as const;
-export const ANIMALS = [
-  "Kangaroos",
-  "Emus",
-  "Wombats",
-  "Koalas",
-  "Platypuses",
-] as const;
-export const ACTIVITIES = [
-  "Swimming",
-  "Bushwalking",
-  "Indigenous Culture",
-  "Sightseeing",
-] as const;

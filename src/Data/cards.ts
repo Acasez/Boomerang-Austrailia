@@ -1,8 +1,11 @@
 // data/cards.ts
-import { ACTIVITIES, ANIMALS, COLLECTIONS, type Card } from "../Types/Card";
+import { type Card } from "../Types/Card";
 import rawCards from "../JSON/boomerang_australia.json";
 import { oneOf } from "../Utils/validateCards";
 import { REGIONS } from "../consts/regions";
+import { COLLECTIONS } from "@/consts/collections";
+import { ACTIVITIES } from "@/consts/activities";
+import { ANIMALS } from "@/consts/animals";
 
 /** Empty string in JSON means "trait not on this card" */
 function optionalOneOf<T extends string>(
