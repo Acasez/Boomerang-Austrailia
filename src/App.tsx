@@ -1,17 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./index.css";
 import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
 import type { Card } from "./Types/Card";
+import type { PlayedCardsRow, ServerMessage } from "./Types/ServerMessage";
+import { parseServerMessage } from "./Utils/parseServerMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 import Player from "./classes/Player";
 import Header from "./Components/Header";
-
-interface PlayedCardsRow {
-  playerId: number;
-  cards: Card[];
-}
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -25,90 +22,61 @@ export default function App() {
   const [hasHand, setHasHand] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [playedRows, setPlayedRows] = useState<PlayedCardsRow[]>([]);
+  const [roundNumber, setRoundNumber] = useState(0);
   const [selectionProgress, setSelectionProgress] = useState<{
     readyCount: number;
     playerCount: number;
   } | null>(null);
 
-  useEffect(() => {
-    const ws = new WebSocket("ws://localhost:2048");
-    wsRef.current = ws;
-
-    ws.onmessage = (event) => {
-      let data: any;
-      try {
-        data = JSON.parse(event.data);
-      } catch {
-        console.log("Non-JSON message:", event.data);
-        return;
-      }
-      if (data.type === "welcome") {
-        setMyId(data.playerId);
+  const handleServerMessage = useCallback((message: ServerMessage) => {
+    switch (message.type) {
+      case "welcome":
+        setMyId(message.playerId);
         setPlayerState({ player: new Player() });
-        setGameStarted(Boolean(data.gameStarted));
+        setGameStarted(message.gameStarted);
         setHasHand(false);
         setGameOver(false);
         setPlayedRows([]);
+        setRoundNumber(0);
         setSelectionProgress(null);
         setGameError(null);
-      }
-      if (data.type === "gameStarted") {
-        if (!Array.isArray(data.hand) || !Array.isArray(data.playedRows)) {
-          const error =
-            "Game start message did not include a valid hand and played-card rows.";
-          console.error(error);
-          setGameError(error);
-          return;
-        }
-
+        return;
+      case "gameStarted": {
         const player = new Player();
-        player.hand = data.hand;
+        player.hand = message.hand;
         setPlayerState({ player });
         setGameStarted(true);
         setHasHand(true);
         setGameOver(false);
-        setPlayedRows(data.playedRows);
+        setPlayedRows(message.playedRows);
+        setRoundNumber(message.roundNumber);
         setSelectionProgress(null);
         setGameError(null);
+        return;
       }
-      if (data.type === "selectionProgress") {
-        if (
-          !Number.isInteger(data.readyCount) ||
-          !Number.isInteger(data.playerCount)
-        ) {
-          setGameError("Server sent invalid draft progress.");
-          return;
-        }
-
+      case "selectionProgress":
         setSelectionProgress({
-          readyCount: data.readyCount,
-          playerCount: data.playerCount,
+          readyCount: message.readyCount,
+          playerCount: message.playerCount,
         });
-      }
-      if (data.type === "roundResolved") {
-        if (
-          !Array.isArray(data.hand) ||
-          !Array.isArray(data.currentPlays) ||
-          !Array.isArray(data.playedRows)
-        ) {
-          setGameError("Server sent invalid draft results.");
-          return;
-        }
-
+        return;
+      case "roundResolved": {
         const player = new Player();
-        player.hand = data.hand;
-        player.currentPlays = data.currentPlays;
+        player.hand = message.hand;
+        player.currentPlays = message.currentPlays;
         setPlayerState({ player });
         setHasHand(true);
-        setPlayedRows(data.playedRows);
+        setPlayedRows(message.playedRows);
+        setRoundNumber(message.roundNumber);
         setSelectionProgress(null);
-        setGameOver(Boolean(data.gameOver));
+        setGameOver(message.gameOver);
         setGameError(null);
+        return;
       }
-      if (data.type === "error") {
-        setGameError(String(data.message ?? "The game could not be started."));
-      }
-      if (data.type === "selectionError") {
+      case "error":
+        setGameError(message.message);
+        return;
+      case "selectionError":
         setPlayerState((current) => {
           const player = new Player();
           player.hand = current.player.hand;
@@ -116,13 +84,44 @@ export default function App() {
           player.score = current.player.score;
           return { player };
         });
-        setGameError(String(data.message ?? "The card could not be selected."));
+        setGameError(message.message);
+        return;
+      case "chat":
+        setMessages((previous) => [...previous, message]);
+        return;
+      default: {
+        const exhaustiveCheck: never = message;
+        return exhaustiveCheck;
       }
-      if (data.type === "chat") setMessages((prev) => [...prev, data]);
+    }
+  }, []);
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:2048");
+    wsRef.current = ws;
+
+    ws.onmessage = (event) => {
+      let payload: unknown;
+      try {
+        payload = JSON.parse(event.data);
+      } catch (error) {
+        console.error("Could not parse a server message.", error);
+        setGameError("The server sent an invalid message.");
+        return;
+      }
+      const message = parseServerMessage(payload);
+      if (!message) {
+        const error = "The server sent an unknown or invalid message.";
+        console.error(error, payload);
+        setGameError(error);
+        return;
+      }
+
+      handleServerMessage(message);
     };
 
     return () => ws.close();
-  }, []);
+  }, [handleServerMessage]);
 
   const startGame = () => {
     const ws = wsRef.current;
@@ -143,11 +142,18 @@ export default function App() {
 
     const player = playerState.player;
     const card = player.hand[handIndex];
-    if (!card || player.selectedCard !== null) return;
+    if (!card) return;
+    const nextSelection = player.selectedCard === card ? null : card;
 
     try {
-      ws.send(JSON.stringify({ type: "selectCard", handIndex }));
-      player.selectCard(card);
+      ws.send(
+        JSON.stringify({
+          type: "selectCard",
+          handIndex: nextSelection === null ? null : handIndex,
+          roundNumber,
+        }),
+      );
+      player.selectCard(nextSelection);
       setPlayerState({ player });
       setGameError(null);
     } catch (error) {

@@ -15,13 +15,9 @@ export default class Player {
     }
   }
 
-  selectCard(card: Card): void {
-    if (!this.hand.includes(card)) {
+  selectCard(card: Card | null): void {
+    if (card !== null && !this.hand.includes(card)) {
       throw new Error("Cannot select a card that is not in the player's hand.");
-    }
-
-    if (this.selectedCard !== null) {
-      throw new Error("This player has already selected a card.");
     }
 
     this.selectedCard = card;

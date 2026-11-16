@@ -18,8 +18,7 @@ export default function HandDisplay({
   gameOver,
   selectionProgress,
 }: HandDisplayProps) {
-  const canSelect =
-    gameStarted && hasHand && !gameOver && player.selectedCard === null;
+  const canSelect = gameStarted && hasHand && !gameOver;
   return (
     <div className="bg-blue-200 rounded-xl p-3">
       <h1 className="text-2xl underline">Hand</h1>
@@ -31,7 +30,9 @@ export default function HandDisplay({
         </p>
       )}
       {player.selectedCard && (
-        <p>Card selected. Waiting for the other players.</p>
+        <p>
+          Selected. Click another card to swap, or click this card to unselect.
+        </p>
       )}
       {selectionProgress && (
         <p>

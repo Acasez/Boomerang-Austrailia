@@ -17,6 +17,10 @@ function isMessageType(
   return isRecord(value) && value.type === type;
 }
 
+function isHandIndex(value: unknown): value is number | null {
+  return value === null || (typeof value === "number" && Number.isInteger(value));
+}
+
 function broadcastSelectionProgress(): void {
   const readyCount = game.activePlayers.filter(
     (player) => player.selectedCard !== null,
@@ -50,23 +54,29 @@ function getPlayedRows(): { playerId: number; cards: Player["currentPlays"] }[] 
   });
 }
 
-function broadcastResolvedRound(): void {
+function sendResolvedRound(
+  clientSocket: ServerWebSocket,
+  client: { id: number; player: Player },
+  playedRows: { playerId: number; cards: Player["currentPlays"] }[],
+): void {
   const gameOver = game.activePlayers.every((player) => player.hand.length === 0);
-  const playedRows = getPlayedRows();
+  clientSocket.send(
+    JSON.stringify({
+      type: "roundResolved",
+      hand: client.player.hand,
+      currentPlays: client.player.currentPlays,
+      playedRows,
+      roundNumber: game.roundNumber,
+      gameOver,
+    }),
+  );
+}
 
+function broadcastResolvedRound(): void {
+  const playedRows = getPlayedRows();
   for (const [clientSocket, client] of clients) {
     if (!game.activePlayers.includes(client.player)) continue;
-
-    clientSocket.send(
-      JSON.stringify({
-        type: "roundResolved",
-        hand: client.player.hand,
-        currentPlays: client.player.currentPlays,
-        playedRows,
-        roundNumber: game.roundNumber,
-        gameOver,
-      }),
-    );
+    sendResolvedRound(clientSocket, client, playedRows);
   }
 }
 
@@ -119,6 +129,7 @@ Bun.serve({
               type: "gameStarted",
               hand: connectedClient.player.hand,
               playedRows: getPlayedRows(),
+              roundNumber: game.roundNumber,
             }),
           );
         }
@@ -127,18 +138,42 @@ Bun.serve({
 
       if (isMessageType(request, "selectCard")) {
         const handIndex = request.handIndex;
-        if (typeof handIndex !== "number" || !Number.isInteger(handIndex)) {
+        const roundNumber = request.roundNumber;
+        if (
+          !isHandIndex(handIndex) ||
+          typeof roundNumber !== "number" ||
+          !Number.isInteger(roundNumber)
+        ) {
           ws.send(
             JSON.stringify({
               type: "selectionError",
-              message: "The selected hand index is invalid.",
+              message: "The selection request is invalid.",
             }),
           );
           return;
         }
 
+        if (!game.activePlayers.includes(client.player)) {
+          ws.send(
+            JSON.stringify({
+              type: "selectionError",
+              message: "This player is not in the active game.",
+            }),
+          );
+          return;
+        }
+
+        if (roundNumber !== game.roundNumber) {
+          sendResolvedRound(ws, client, getPlayedRows());
+          return;
+        }
+
         try {
-          const playedCards = game.selectCard(client.player, handIndex);
+          const playedCards = game.selectCard(
+            client.player,
+            handIndex,
+            roundNumber,
+          );
           if (playedCards) {
             broadcastResolvedRound();
           } else {

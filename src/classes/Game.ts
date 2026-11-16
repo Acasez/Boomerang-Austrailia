@@ -50,9 +50,22 @@ export default class Game {
     this.started = true;
   }
 
-  selectCard(player: Player, handIndex: number): Card[] | null {
+  selectCard(
+    player: Player,
+    handIndex: number | null,
+    roundNumber: number,
+  ): Card[] | null {
     if (!this.started || !this.activePlayers.includes(player)) {
       throw new Error("This player is not in the active game.");
+    }
+
+    if (roundNumber !== this.roundNumber) {
+      throw new Error("This selection belongs to a different round.");
+    }
+
+    if (handIndex === null) {
+      player.selectCard(null);
+      return null;
     }
 
     if (!Number.isInteger(handIndex)) {
