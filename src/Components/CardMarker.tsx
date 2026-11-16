@@ -6,7 +6,7 @@ interface CardMarkerProps {
 
 export default function CardMarker({ symbol }: CardMarkerProps) {
   return (
-    <div className="bg-amber-100 border-y-4 border-red-500 rounded-lg text-black">
+    <div className="bg-amber-100 border-y-4 border-red-500 rounded-lg text-black max-w-10 text-sm">
       <p>{symbol}</p>
     </div>
   );
