@@ -13,4 +13,13 @@ export default class Player {
       this.hand.push(getRandomCard(deck));
     }
   }
+
+  playCard(card: Card): void {
+    const cardIndex = this.hand.indexOf(card);
+    if (cardIndex === -1) {
+      throw new Error("Cannot play a card that is not in the player's hand.");
+    }
+
+    this.currentPlays.push(...this.hand.splice(cardIndex, 1));
+  }
 }

@@ -7,6 +7,7 @@ const MARKER_KEYS = ["collection", "animal", "activity"] as const;
 
 interface CardProps {
   card: Card;
+  onPlay?: (card: Card) => void;
 }
 
 function getMarkers(card: Card): MarkerSymbol[] {
@@ -15,14 +16,13 @@ function getMarkers(card: Card): MarkerSymbol[] {
   );
 }
 
-export default function CardComponent({ card }: CardProps) {
-  const playCard = () => {
-    console.log("Played card", card.name);
-  };
+export default function CardComponent({ card, onPlay }: CardProps) {
   return (
     <button
+      type="button"
       className="w-60 h-80 rounded-2xl bg-amber-300 text-white flex flex-row"
-      onClick={playCard}
+      onClick={() => onPlay?.(card)}
+      disabled={!onPlay}
     >
       <div className="flex flex-col flex-1 justify-between m-4">
         <div className="border-2 border-red-700 rounded-4xl bg-white text-red-700 text-2xl w-10 text-center">

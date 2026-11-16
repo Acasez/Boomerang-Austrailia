@@ -4,12 +4,20 @@ import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
+import Game from "./classes/Game";
+import Player from "./classes/Player";
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [myId, setMyId] = useState<number | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
+  const [gameState, setGameState] = useState(() => {
+    const game = new Game();
+    const player = new Player();
+    player.drawCard(game.deck);
+    return { game, player };
+  });
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:2048");
@@ -30,13 +38,21 @@ export default function App() {
     return () => ws.close();
   }, []);
 
+  const refreshGameState = () => {
+    setGameState((current) => ({ ...current }));
+  };
+
   return (
     <div className="mx-auto p-8 text-center bg-gray-100">
-      <div>
+      <div className="flex flex-row gap-5">
         <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
-        <PlayedCardDisplay />
+        <PlayedCardDisplay player={gameState.player} />
       </div>
-      <HandDisplay />
+      <HandDisplay
+        game={gameState.game}
+        player={gameState.player}
+        onStateChange={refreshGameState}
+      />
     </div>
   );
 }
