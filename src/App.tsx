@@ -5,6 +5,7 @@ import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 import Player from "./classes/Player";
+import Header from "./Components/Header";
 
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -14,6 +15,8 @@ export default function App() {
     player: new Player(),
   }));
   const [gameError, setGameError] = useState<string | null>(null);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [hasHand, setHasHand] = useState(false);
 
   useEffect(() => {
     const ws = new WebSocket("ws://localhost:2048");
@@ -28,8 +31,15 @@ export default function App() {
         return;
       }
       if (data.type === "welcome") {
+        setMyId(data.playerId);
+        setPlayerState({ player: new Player() });
+        setGameStarted(Boolean(data.gameStarted));
+        setHasHand(false);
+        setGameError(null);
+      }
+      if (data.type === "gameStarted") {
         if (!Array.isArray(data.hand)) {
-          const error = "Server welcome message did not include a valid hand.";
+          const error = "Game start message did not include a valid hand.";
           console.error(error);
           setGameError(error);
           return;
@@ -37,11 +47,14 @@ export default function App() {
 
         const player = new Player();
         player.hand = data.hand;
-        setMyId(data.playerId);
         setPlayerState({ player });
+        setGameStarted(true);
+        setHasHand(true);
         setGameError(null);
       }
-      if (data.type === "error") setGameError(data.message);
+      if (data.type === "error") {
+        setGameError(String(data.message ?? "The game could not be started."));
+      }
       if (data.type === "chat") setMessages((prev) => [...prev, data]);
     };
 
@@ -52,17 +65,36 @@ export default function App() {
     setPlayerState((current) => ({ player: current.player }));
   };
 
+  const startGame = () => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      setGameError("Connect to the game server before starting.");
+      return;
+    }
+
+    ws.send(JSON.stringify({ type: "startGame" }));
+  };
+
   return (
-    <div className="mx-auto p-8 text-center bg-gray-100">
-      <div className="flex flex-row gap-5">
-        <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
-        <PlayedCardDisplay player={playerState.player} />
-      </div>
-      {gameError && <p role="alert">{gameError}</p>}
-      <HandDisplay
-        player={playerState.player}
-        onStateChange={refreshPlayerState}
+    <>
+      <Header
+        gameStarted={gameStarted}
+        disabled={myId === null}
+        onStartGame={startGame}
       />
-    </div>
+      <div className="mx-auto p-8 text-center bg-gray-100">
+        <div className="flex flex-row gap-5">
+          <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
+          <PlayedCardDisplay player={playerState.player} />
+        </div>
+        {gameError && <p role="alert">{gameError}</p>}
+        <HandDisplay
+          player={playerState.player}
+          onStateChange={refreshPlayerState}
+          gameStarted={gameStarted}
+          hasHand={hasHand}
+        />
+      </div>
+    </>
   );
 }

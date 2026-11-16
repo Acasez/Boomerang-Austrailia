@@ -22,4 +22,10 @@ export default class Player {
 
     this.currentPlays.push(...this.hand.splice(cardIndex, 1));
   }
+
+  reset(): void {
+    this.score = 0;
+    this.currentPlays = [];
+    this.hand = [];
+  }
 }
