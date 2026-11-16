@@ -4,13 +4,13 @@ import { useState } from "react";
 import Game from "../classes/Game";
 import Player from "@/classes/Player";
 
-interface CardDisplayState {
+interface HandDisplayState {
   game: Game;
   player: Player;
 }
 
-export default function CardDisplay() {
-  const [state, setState] = useState<CardDisplayState>(() => {
+export default function HandDisplay() {
+  const [state, setState] = useState<HandDisplayState>(() => {
     const game = new Game();
     const player = new Player();
     player.drawCard(game.deck);

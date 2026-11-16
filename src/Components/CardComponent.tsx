@@ -16,8 +16,14 @@ function getMarkers(card: Card): MarkerSymbol[] {
 }
 
 export default function CardComponent({ card }: CardProps) {
+  const playCard = () => {
+    console.log("Played card", card.name);
+  };
   return (
-    <div className="w-60 h-80 rounded-2xl bg-amber-300 text-white flex flex-row">
+    <button
+      className="w-60 h-80 rounded-2xl bg-amber-300 text-white flex flex-row"
+      onClick={playCard}
+    >
       <div className="flex flex-col flex-1 justify-between m-4">
         <div className="border-2 border-red-700 rounded-4xl bg-white text-red-700 text-2xl w-10 text-center">
           <p>{card.throwValue}</p>
@@ -39,6 +45,6 @@ export default function CardComponent({ card }: CardProps) {
           <p>{card.region}</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }

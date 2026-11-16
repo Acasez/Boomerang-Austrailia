@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./index.css";
-import CardDisplay from "./Components/CardDisplay";
+import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
 
@@ -32,7 +32,7 @@ export default function App() {
   return (
     <div className="mx-auto p-8 text-center bg-gray-100">
       <ChatBox wsRef={wsRef} messages={messages} myId={myId} />
-      <CardDisplay />
+      <HandDisplay />
     </div>
   );
 }
