@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import "./index.css";
-import type { Card } from "./Types/Card";
 import CardDisplay from "./Components/CardDisplay";
 
 type ChatMessage = { senderId: number; text: string };

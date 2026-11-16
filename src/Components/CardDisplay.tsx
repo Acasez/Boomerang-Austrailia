@@ -1,21 +1,13 @@
 import type { Card } from "@/Types/Card";
 import CardComponent from "./CardComponent";
-import cards from "@/Data/cards";
 import { useState } from "react";
-
-function randomCard(): Card {
-  const card = cards[Math.floor(Math.random() * cards.length)];
-  if (!card) {
-    throw new Error("Cannot select a card from an empty deck.");
-  }
-  return card;
-}
+import { getRandomCard } from "../Utils/CardUtils";
 
 interface CardMarkerProps {}
 
 export default function CardDisplay({}: CardMarkerProps) {
-  const [card, setCard] = useState<Card>(randomCard);
-  const deal = () => setCard(randomCard());
+  const [card, setCard] = useState<Card>(getRandomCard);
+  const deal = () => setCard(getRandomCard());
   return (
     <div>
       {" "}
