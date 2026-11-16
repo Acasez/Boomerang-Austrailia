@@ -1,23 +1,25 @@
 import type { Card } from "@/Types/Card";
 import CardComponent from "./CardComponent";
 import { useState } from "react";
-import { getRandomCard } from "../Utils/CardUtils";
 import Game from "../classes/Game";
+import Player from "@/classes/Player";
 
 interface CardDisplayState {
   game: Game;
-  card: Card;
+  player: Player;
 }
 
 export default function CardDisplay() {
   const [state, setState] = useState<CardDisplayState>(() => {
     const game = new Game();
-    return { game, card: getRandomCard(game.deck) };
+    const player = new Player();
+    player.drawCard(game.deck);
+    return { game, player };
   });
 
   const deal = () => {
-    const card = getRandomCard(state.game.deck);
-    setState({ game: state.game, card });
+    state.player.drawCard(state.game.deck);
+    setState({ game: state.game, player: state.player });
   };
 
   return (
@@ -31,8 +33,10 @@ export default function CardDisplay() {
         Deal random card
       </button>
       {state.game.deck.length === 0 && <p>No cards left in the deck.</p>}
-      <div>
-        <CardComponent card={state.card} />
+      <div className="flex flex-wrap gap-4">
+        {state.player.hand.map((card, index) => (
+          <CardComponent key={`${card.name}-${index}`} card={card} />
+        ))}
       </div>
     </div>
   );
