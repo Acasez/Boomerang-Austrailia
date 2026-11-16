@@ -1,7 +1,8 @@
 // data/cards.ts
 import { ACTIVITIES, ANIMALS, COLLECTIONS, type Card } from "../Types/Card";
 import rawCards from "../JSON/boomerang_australia.json";
-import { oneOf, REGIONS } from "./validate";
+import { oneOf } from "../Utils/validateCards";
+import { REGIONS } from "../consts/regions";
 
 /** Empty string in JSON means "trait not on this card" */
 function optionalOneOf<T extends string>(
@@ -34,14 +35,6 @@ export const cards: Card[] = rawCards.map((raw, i) => {
     animal: optionalOneOf(ANIMALS, raw.animal, `${where}: animal`),
     activity: optionalOneOf(ACTIVITIES, raw.activity, `${where}: activity`),
   };
-
-  // Enforce "exactly two of three" at runtime too
-  /* const present = ["collection", "animal", "activity"].filter(
-    (k) => card[k as keyof Card] !== undefined,
-  ).length;
-  if (present !== 2) {
-    throw new Error(`${where}: has ${present} traits, expected exactly 2`);
-  } */
 
   // The runtime check above narrows this optional-trait shape to a Card variant.
   const card = candidate as Card;
