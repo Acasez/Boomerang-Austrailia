@@ -25,8 +25,10 @@ function isCardArray(value: unknown): value is Card[] {
 function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
   return (
     isRecord(value) &&
-    typeof value.playerId === "number" &&
-    Number.isInteger(value.playerId) &&
+    isRecord(value.player) &&
+    typeof value.player.id === "number" &&
+    Number.isInteger(value.player.id) &&
+    typeof value.player.score === "number" &&
     isCardArray(value.cards)
   );
 }

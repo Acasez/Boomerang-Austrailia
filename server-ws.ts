@@ -38,7 +38,10 @@ function broadcastSelectionProgress(): void {
   }
 }
 
-function getPlayedRows(): { playerId: number; cards: Player["currentPlays"] }[] {
+function getPlayedRows(): {
+  player: { id: number; score: number };
+  cards: Player["currentPlays"];
+}[] {
   return game.activePlayers.map((player) => {
     const connectedClient = Array.from(clients.values()).find(
       (client) => client.player === player,
@@ -48,7 +51,10 @@ function getPlayedRows(): { playerId: number; cards: Player["currentPlays"] }[] 
     }
 
     return {
-      playerId: connectedClient.id,
+      player: {
+        id: connectedClient.id,
+        score: player.score,
+      },
       cards: player.currentPlays,
     };
   });
@@ -57,7 +63,10 @@ function getPlayedRows(): { playerId: number; cards: Player["currentPlays"] }[] 
 function sendResolvedRound(
   clientSocket: ServerWebSocket,
   client: { id: number; player: Player },
-  playedRows: { playerId: number; cards: Player["currentPlays"] }[],
+  playedRows: {
+    player: { id: number; score: number };
+    cards: Player["currentPlays"];
+  }[],
 ): void {
   const gameOver = game.activePlayers.every((player) => player.hand.length === 0);
   clientSocket.send(

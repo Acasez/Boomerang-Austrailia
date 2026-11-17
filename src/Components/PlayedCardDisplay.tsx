@@ -1,9 +1,10 @@
-import CardComponent from "./CardComponent";
+import type { PlayedCardsRow } from "@/Types/ServerMessage";
 import type { Card } from "@/Types/Card";
+import CardComponent from "./CardComponent";
 
 interface PlayedCardDisplayProps {
   ownPlayerId: number | null;
-  rows: { playerId: number; cards: Card[] }[];
+  rows: PlayedCardsRow[];
 }
 
 export default function PlayedCardDisplay({
@@ -15,17 +16,18 @@ export default function PlayedCardDisplay({
       <h1 className="text-2xl underline mb-2">Played Cards</h1>
       <div className="flex flex-col gap-4">
         {rows.map((row) => (
-          <div key={row.playerId} className="flex items-center gap-4">
-            <h2 className="bg-green-400 p-2 rounded-xl text-center">
-              Player {row.playerId}
-            </h2>
+          <div key={row.player.id} className="flex items-center gap-4">
+            <div className="bg-green-400 p-2 rounded-xl text-center">
+              <h2>Player {row.player.id}</h2>
+              <h3>Score: {row.player.score}</h3>
+            </div>
             <div className="flex flex-row flex-nowrap gap-4 overflow-x-auto">
               {row.cards.map((card, index) => (
                 <CardComponent
                   key={`${card.name}-${index}`}
                   card={card}
                   selected={false}
-                  hidden={index === 0 && row.playerId !== ownPlayerId}
+                  hidden={index === 0 && row.player.id !== ownPlayerId}
                 />
               ))}
             </div>

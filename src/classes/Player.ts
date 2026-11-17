@@ -3,7 +3,7 @@ import type { Card } from "@/Types/Card";
 import { getRandomCard } from "@/Utils/CardUtils";
 
 export default class Player {
-  score: Number = 0;
+  score = 0;
 
   currentPlays: Card[] = [];
   hand: Card[] = [];

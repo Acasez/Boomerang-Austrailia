@@ -1,7 +1,10 @@
 import type { Card } from "./Card";
 
 export interface PlayedCardsRow {
-  playerId: number;
+  player: {
+    id: number;
+    score: number;
+  };
   cards: Card[];
 }
 
