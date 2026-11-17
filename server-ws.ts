@@ -1,6 +1,7 @@
 import type { ServerWebSocket } from "bun";
 import Game from "./src/classes/Game";
 import Player from "./src/classes/Player";
+import type { PlayerInfo } from "@/Types/PlayerInfo";
 
 const clients = new Map<ServerWebSocket, { id: number; player: Player }>();
 const game = new Game();
@@ -41,13 +42,7 @@ function broadcastSelectionProgress(): void {
 }
 
 function getPlayedRows(): {
-  player: {
-    id: number;
-    score: number;
-    throwScore: number;
-    animalScore: number;
-    collectionScore: number;
-  };
+  player: PlayerInfo;
   cards: Player["currentPlays"];
 }[] {
   return game.activePlayers.map((player) => {

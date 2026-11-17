@@ -1,14 +1,8 @@
 import type { Card } from "./Card";
+import type { PlayerInfo } from "./PlayerInfo";
 
 export interface PlayedCardsRow {
-  player: {
-    id: number;
-    score: number;
-
-    throwScore: number;
-    animalScore: number;
-    collectionScore: number;
-  };
+  player: PlayerInfo;
   cards: Card[];
 }
 

@@ -1,5 +1,6 @@
 import type { PlayedCardsRow } from "@/Types/ServerMessage";
 import CardComponent from "./CardComponent";
+import PlayerScoreBoard from "./PlayerScoreBoard";
 
 interface PlayedCardDisplayProps {
   ownPlayerId: number | null;
@@ -16,17 +17,7 @@ export default function PlayedCardDisplay({
       <div className="flex flex-col gap-4">
         {rows.map((row) => (
           <div key={row.player.id} className="flex items-center gap-4">
-            <div className="bg-green-400 p-2 rounded-xl text-center">
-              <h2 className="text-xl underline">Player {row.player.id}</h2>
-              <h3>Score: {row.player.score}</h3>
-              <h3 className="text-sm">Throw Score: {row.player.throwScore}</h3>
-              <h3 className="text-sm">
-                Animal Score: {row.player.animalScore}
-              </h3>
-              <h3 className="text-sm">
-                Collection Score: {row.player.collectionScore}
-              </h3>
-            </div>
+            <PlayerScoreBoard player={row.player} />
             <div className="flex flex-row flex-nowrap gap-4 overflow-x-auto">
               {row.cards.map((card, index) => (
                 <CardComponent
