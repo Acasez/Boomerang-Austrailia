@@ -27,7 +27,7 @@ export default function CardComponent({
   return (
     <button
       type="button"
-      className={`w-52 h-70 rounded-2xl bg-amber-300 text-white flex flex-row ${selected ? "-mt-5 ring-4 ring-blue-600" : ""}`}
+      className={`w-52 h-70 rounded-2xl bg-pink-200 text-white flex flex-row ${selected ? "-mt-5 ring-4 ring-blue-600" : ""}`}
       onClick={onSelect}
       disabled={!onSelect}
     >
