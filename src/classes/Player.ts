@@ -1,4 +1,4 @@
-import { HAND_SIZE } from "@/consts/handzide";
+import { HAND_SIZE } from "@/consts/handsize";
 import type { Card } from "@/Types/Card";
 import { getRandomCard } from "@/Utils/CardUtils";
 

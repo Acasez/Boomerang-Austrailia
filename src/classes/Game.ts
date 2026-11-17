@@ -1,5 +1,5 @@
 import cards from "@/Data/cards";
-import { HAND_SIZE } from "@/consts/handzide";
+import { HAND_SIZE } from "@/consts/handsize";
 import type { Card } from "@/Types/Card";
 import { calculateRoundScores } from "@/Utils/calculateScores";
 import type Player from "./Player";
@@ -79,7 +79,11 @@ export default class Game {
     }
 
     player.selectCard(card);
-    if (this.activePlayers.some((activePlayer) => activePlayer.selectedCard === null)) {
+    if (
+      this.activePlayers.some(
+        (activePlayer) => activePlayer.selectedCard === null,
+      )
+    ) {
       return null;
     }
 
@@ -99,7 +103,9 @@ export default class Game {
 
     if (
       this.activePlayers.length > 0 &&
-      this.activePlayers.every((activePlayer) => activePlayer.selectedCard !== null)
+      this.activePlayers.every(
+        (activePlayer) => activePlayer.selectedCard !== null,
+      )
     ) {
       return this.resolveRound();
     }
@@ -113,7 +119,9 @@ export default class Game {
     for (const player of this.activePlayers) {
       const selectedCard = player.selectedCard;
       if (!selectedCard) {
-        throw new Error("Cannot resolve a round while a player has not selected.");
+        throw new Error(
+          "Cannot resolve a round while a player has not selected.",
+        );
       }
 
       const cardIndex = player.hand.indexOf(selectedCard);
@@ -134,7 +142,8 @@ export default class Game {
 
     for (let index = 0; index < this.activePlayers.length; index++) {
       const player = this.activePlayers[index];
-      const nextPlayer = this.activePlayers[(index + 1) % this.activePlayers.length];
+      const nextPlayer =
+        this.activePlayers[(index + 1) % this.activePlayers.length];
       const hand = remainingHands[index];
       if (!player || !nextPlayer || !hand) {
         throw new Error("Could not rotate player hands.");
