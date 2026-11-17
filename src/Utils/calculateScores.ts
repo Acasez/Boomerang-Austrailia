@@ -1,8 +1,8 @@
 import { HAND_SIZE } from "@/consts/handsize";
 import type { Card } from "@/Types/Card";
-import { ANIMAL_POINTS } from "@/consts/animals";
+import { ANIMAL_DETAILS } from "@/consts/animals";
 import {
-  COLLECTION_POINTS,
+  COLLECTION_DETAILS,
   SMALL_BAGGAGE_LIMIT,
   SMALL_BAGGAGE_MULTIPLIER,
 } from "@/consts/collections";
@@ -11,7 +11,7 @@ export function calculateCollectionScore(playedCards: Card[]): number {
   let score = 0;
 
   //Todo Score for collections
-  for (const item of COLLECTION_POINTS) {
+  for (const item of COLLECTION_DETAILS) {
     const collectionCount = playedCards.filter(
       (card) => card.collection === item.name,
     ).length;
@@ -28,7 +28,7 @@ export function calculateAnimalScore(playedCards: Card[]): number {
   let score = 0;
 
   //Animal Score
-  for (const animal of ANIMAL_POINTS) {
+  for (const animal of ANIMAL_DETAILS) {
     const animalCount = playedCards.filter(
       (card) => card.animal === animal.name,
     ).length;

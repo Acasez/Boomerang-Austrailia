@@ -5,6 +5,25 @@ export const ACTIVITIES = [
   "Sightseeing",
 ] as const;
 
+export const ACTIVITY_DETAILS = [
+  {
+    name: "Swimming",
+    image: "swimming",
+  },
+  {
+    name: "Bushwalking",
+    image: "hiking",
+  },
+  {
+    name: "Indigenous Culture",
+    image: "boomerang",
+  },
+  {
+    name: "Sightseeing",
+    image: "sightseeing",
+  },
+] as const;
+
 export const ACTIVITY_SCORE_TABLE = [
   {
     amount: 1,

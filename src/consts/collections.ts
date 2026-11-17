@@ -5,22 +5,30 @@ export const COLLECTIONS = [
   "Souvenirs",
 ] as const;
 
-export const COLLECTION_POINTS = [
+export const COLLECTION_DETAILS = [
   {
     name: "Leaves",
     score: 1,
+    image: "leaf",
+    copies: 5,
   },
   {
     name: "Wildflowers",
     score: 2,
+    image: "wildflower",
+    copies: 4,
   },
   {
     name: "Shells",
     score: 3,
+    image: "shell",
+    copies: 3,
   },
   {
     name: "Souvenirs",
     score: 5,
+    image: "souvenir",
+    copies: 1,
   },
 ] as const;
 
