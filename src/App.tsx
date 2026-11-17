@@ -3,7 +3,6 @@ import "./index.css";
 import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
-import type { Card } from "./Types/Card";
 import type { PlayedCardsRow, ServerMessage } from "./Types/ServerMessage";
 import { parseServerMessage } from "./Utils/parseServerMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
@@ -182,7 +181,7 @@ export default function App() {
           />
         </div>
         {gameError && <p role="alert">{gameError}</p>}
-        <PlayedCardDisplay rows={playedRows} />
+        <PlayedCardDisplay ownPlayerId={myId} rows={playedRows} />
       </div>
     </>
   );

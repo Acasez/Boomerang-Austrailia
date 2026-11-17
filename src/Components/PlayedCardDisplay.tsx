@@ -2,10 +2,14 @@ import CardComponent from "./CardComponent";
 import type { Card } from "@/Types/Card";
 
 interface PlayedCardDisplayProps {
+  ownPlayerId: number | null;
   rows: { playerId: number; cards: Card[] }[];
 }
 
-export default function PlayedCardDisplay({ rows }: PlayedCardDisplayProps) {
+export default function PlayedCardDisplay({
+  rows,
+  ownPlayerId,
+}: PlayedCardDisplayProps) {
   return (
     <div className="bg-green-200 rounded-xl p-3">
       <h1 className="text-2xl underline mb-2">Played Cards</h1>
@@ -21,6 +25,7 @@ export default function PlayedCardDisplay({ rows }: PlayedCardDisplayProps) {
                   key={`${card.name}-${index}`}
                   card={card}
                   selected={false}
+                  hidden={index === 0 && row.playerId !== ownPlayerId}
                 />
               ))}
             </div>
