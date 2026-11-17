@@ -3,6 +3,7 @@ import type { Card } from "@/Types/Card";
 import { getRandomCard } from "@/Utils/CardUtils";
 
 export default class Player {
+  totalScore = 0;
   score = 0;
 
   currentPlays: Card[] = [];
@@ -24,6 +25,7 @@ export default class Player {
   }
 
   reset(): void {
+    this.totalScore = 0;
     this.score = 0;
     this.currentPlays = [];
     this.hand = [];

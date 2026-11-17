@@ -1,6 +1,7 @@
 import cards from "@/Data/cards";
 import { HAND_SIZE } from "@/consts/handzide";
 import type { Card } from "@/Types/Card";
+import { calculateRoundScores } from "@/Utils/calculateScores";
 import type Player from "./Player";
 
 export default class Game {
@@ -125,6 +126,10 @@ export default class Game {
       player.selectedCard = null;
       playedCards.push(selectedCard);
       remainingHands.push(player.hand);
+    }
+
+    for (const player of this.activePlayers) {
+      player.score = calculateRoundScores(player.currentPlays);
     }
 
     for (let index = 0; index < this.activePlayers.length; index++) {
