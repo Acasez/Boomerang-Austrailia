@@ -80,7 +80,7 @@ export default function App() {
           const player = new Player();
           player.hand = current.player.hand;
           player.currentPlays = current.player.currentPlays;
-          player.score = current.player.score;
+          player.roundScore = current.player.roundScore;
           return { player };
         });
         setGameError(message.message);

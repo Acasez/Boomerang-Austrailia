@@ -1,7 +1,11 @@
 import cards from "@/Data/cards";
 import { HAND_SIZE } from "@/consts/handsize";
 import type { Card } from "@/Types/Card";
-import { calculateRoundScores } from "@/Utils/calculateScores";
+import {
+  calculateAnimalScore,
+  calculateCollectionScore,
+  calculateThrowScore,
+} from "@/Utils/calculateScores";
 import type Player from "./Player";
 
 export default class Game {
@@ -137,7 +141,12 @@ export default class Game {
     }
 
     for (const player of this.activePlayers) {
-      player.score = calculateRoundScores(player.currentPlays);
+      player.throwScore = calculateThrowScore(player.currentPlays);
+      player.collectionScore = calculateCollectionScore(player.currentPlays);
+      player.animalScore = calculateAnimalScore(player.currentPlays);
+
+      player.roundScore =
+        player.throwScore + player.collectionScore + player.animalScore;
     }
 
     for (let index = 0; index < this.activePlayers.length; index++) {

@@ -7,22 +7,8 @@ import {
   SMALL_BAGGAGE_MULTIPLIER,
 } from "@/consts/collections";
 
-export function calculateRoundScores(playedCards: Card[]): number {
+export function calculateCollectionScore(playedCards: Card[]): number {
   let score = 0;
-
-  //Throw Score
-  if (playedCards.length === HAND_SIZE)
-    score += Math.abs(
-      playedCards[0]!.throwValue - playedCards[HAND_SIZE - 1]!.throwValue,
-    );
-
-  //Animal Score
-  for (const animal of ANIMAL_POINTS) {
-    const animalCount = playedCards.filter(
-      (card) => card.animal === animal.name,
-    ).length;
-    score += Math.floor(animalCount / 2) * animal.score;
-  }
 
   //Todo Score for collections
   for (const item of COLLECTION_POINTS) {
@@ -34,6 +20,31 @@ export function calculateRoundScores(playedCards: Card[]): number {
       collectionScore * SMALL_BAGGAGE_MULTIPLIER;
     score += collectionScore;
   }
-  //Todo Score for activities
+
+  return score;
+}
+
+export function calculateAnimalScore(playedCards: Card[]): number {
+  let score = 0;
+
+  //Animal Score
+  for (const animal of ANIMAL_POINTS) {
+    const animalCount = playedCards.filter(
+      (card) => card.animal === animal.name,
+    ).length;
+    score += Math.floor(animalCount / 2) * animal.score;
+  }
+  return score;
+}
+
+export function calculateThrowScore(playedCards: Card[]): number {
+  let score = 0;
+
+  //Throw Score
+  if (playedCards.length === HAND_SIZE)
+    score += Math.abs(
+      playedCards[0]!.throwValue - playedCards[HAND_SIZE - 1]!.throwValue,
+    );
+  //Todo Score for locations
   return score;
 }

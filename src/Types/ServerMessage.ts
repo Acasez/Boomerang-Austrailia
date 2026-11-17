@@ -4,6 +4,10 @@ export interface PlayedCardsRow {
   player: {
     id: number;
     score: number;
+
+    throwScore: number;
+    animalScore: number;
+    collectionScore: number;
   };
   cards: Card[];
 }

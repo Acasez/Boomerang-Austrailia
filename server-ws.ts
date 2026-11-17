@@ -18,7 +18,9 @@ function isMessageType(
 }
 
 function isHandIndex(value: unknown): value is number | null {
-  return value === null || (typeof value === "number" && Number.isInteger(value));
+  return (
+    value === null || (typeof value === "number" && Number.isInteger(value))
+  );
 }
 
 function broadcastSelectionProgress(): void {
@@ -39,7 +41,13 @@ function broadcastSelectionProgress(): void {
 }
 
 function getPlayedRows(): {
-  player: { id: number; score: number };
+  player: {
+    id: number;
+    score: number;
+    throwScore: number;
+    animalScore: number;
+    collectionScore: number;
+  };
   cards: Player["currentPlays"];
 }[] {
   return game.activePlayers.map((player) => {
@@ -53,7 +61,10 @@ function getPlayedRows(): {
     return {
       player: {
         id: connectedClient.id,
-        score: player.score,
+        score: player.roundScore,
+        throwScore: player.throwScore,
+        animalScore: player.animalScore,
+        collectionScore: player.collectionScore,
       },
       cards: player.currentPlays,
     };
@@ -68,7 +79,9 @@ function sendResolvedRound(
     cards: Player["currentPlays"];
   }[],
 ): void {
-  const gameOver = game.activePlayers.every((player) => player.hand.length === 0);
+  const gameOver = game.activePlayers.every(
+    (player) => player.hand.length === 0,
+  );
   clientSocket.send(
     JSON.stringify({
       type: "roundResolved",
@@ -102,11 +115,13 @@ Bun.serve({
 
       const id = nextPlayerId++;
       clients.set(ws, { id, player });
-      ws.send(JSON.stringify({
-        type: "welcome",
-        playerId: id,
-        gameStarted: game.started,
-      }));
+      ws.send(
+        JSON.stringify({
+          type: "welcome",
+          playerId: id,
+          gameStarted: game.started,
+        }),
+      );
       console.log(`Player ${id} connected`);
     },
     message(ws, message) {
