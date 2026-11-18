@@ -33,6 +33,10 @@ function isActivity(value: unknown): value is Activity {
   );
 }
 
+function isActivityChoice(value: unknown): value is Activity | null {
+  return value === null || isActivity(value);
+}
+
 function broadcastSelectionProgress(): void {
   const readyCount = game.activePlayers.filter(
     (player) => player.selectedCard !== null,
@@ -72,6 +76,8 @@ function getPlayedRows(): PlayedCardsRow[] {
         mapScore: player.mapScore,
 
         selectedActivity: player.selectedActivity,
+        activitySelectionMade: player.activitySelectionMade,
+        usedActivities: player.usedActivities,
       },
       cards: player.currentPlays,
     };
@@ -100,7 +106,7 @@ function sendResolvedTurn(
 
 function broadcastActivityScoringProgress(): void {
   const readyCount = game.activePlayers.filter(
-    (player) => player.selectedActivity !== null,
+    (player) => player.activitySelectionMade,
   ).length;
   const payload = JSON.stringify({
     type: "activityScoringProgress",
@@ -266,11 +272,11 @@ Bun.serve({
       }
 
       if (isMessageType(request, "selectActivity")) {
-        if (!isActivity(request.activity)) {
+        if (!isActivityChoice(request.activity)) {
           ws.send(
             JSON.stringify({
               type: "error",
-              message: "The selected activity is invalid.",
+              message: "The activity selection is invalid.",
             }),
           );
           return;

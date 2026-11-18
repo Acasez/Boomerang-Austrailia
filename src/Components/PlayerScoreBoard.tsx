@@ -7,16 +7,16 @@ interface PlayerScoreBoardProps {
   player: PlayerInfo;
   ownPlayerId: number | null;
   activityScoring: boolean;
-  activityScored: boolean;
   onSelectActivity: (activity: Activity) => void;
+  onSkipActivity: () => void;
 }
 
 export default function PlayerScoreBoard({
   player,
   ownPlayerId,
   activityScoring,
-  activityScored,
   onSelectActivity,
+  onSkipActivity,
 }: PlayerScoreBoardProps) {
   const canSelect = activityScoring && player.id === ownPlayerId;
 
@@ -27,12 +27,25 @@ export default function PlayerScoreBoard({
           <ActivityScoreMarker
             key={symbol}
             symbol={symbol}
-            scoringMarker={canSelect}
-            scored={activityScored && player.selectedActivity === symbol}
+            scoringMarker={canSelect && !player.usedActivities.includes(symbol)}
+            scored={player.usedActivities.includes(symbol)}
             selected={player.selectedActivity === symbol}
-            onSelect={canSelect ? () => onSelectActivity(symbol) : undefined}
+            onSelect={
+              canSelect && !player.usedActivities.includes(symbol)
+                ? () => onSelectActivity(symbol)
+                : undefined
+            }
           />
         ))}
+        {canSelect && (
+          <button
+            type="button"
+            className={`rounded-lg px-2 py-1 text-xs ${player.activitySelectionMade && player.selectedActivity === null ? "bg-blue-600 text-white" : "bg-gray-100"}`}
+            onClick={onSkipActivity}
+          >
+            Skip
+          </button>
+        )}
       </div>
       <div key={player.id} className="flex items-center gap-4">
         <div className="bg-green-400 p-2 rounded-xl text-center">
@@ -47,6 +60,15 @@ export default function PlayerScoreBoard({
             Collection Score: {player.collectionScore}
           </h3>
           <h3 className="text-sm">Activity Score: {player.activityScore}</h3>
+          {activityScoring &&
+            player.id === ownPlayerId &&
+            player.activitySelectionMade && (
+              <p className="text-xs">
+                {player.selectedActivity
+                  ? `Selected: ${player.selectedActivity}`
+                  : "Skipping this round"}
+              </p>
+            )}
         </div>
       </div>
     </div>

@@ -104,7 +104,7 @@ export default class Game {
     return this.resolveTurn();
   }
 
-  selectActivity(player: Player, activity: Activity): boolean {
+  selectActivity(player: Player, activity: Activity | null): boolean {
     if (
       !this.started ||
       this.activityScoringComplete ||
@@ -115,11 +115,19 @@ export default class Game {
       throw new Error("Activity scoring is not available yet.");
     }
 
-    if (!(ACTIVITIES as readonly string[]).includes(activity)) {
+    if (
+      activity !== null &&
+      !(ACTIVITIES as readonly string[]).includes(activity)
+    ) {
       throw new Error("Invalid activity selected.");
     }
 
+    if (activity !== null && player.usedActivities.includes(activity)) {
+      throw new Error("This activity has already been scored by this player.");
+    }
+
     player.selectedActivity = activity;
+    player.activitySelectionMade = true;
     return this.completeActivityScoringIfReady();
   }
 
@@ -128,7 +136,7 @@ export default class Game {
       this.activityScoringComplete ||
       this.activePlayers.length === 0 ||
       this.activePlayers.some(
-        (player) => player.hand.length > 0 || player.selectedActivity === null,
+        (player) => player.hand.length > 0 || !player.activitySelectionMade,
       )
     ) {
       return false;
@@ -136,14 +144,13 @@ export default class Game {
 
     for (const player of this.activePlayers) {
       const activity = player.selectedActivity;
-      if (activity === null) {
-        throw new Error("Cannot score activities until everyone has selected.");
+      player.activityScore = activity !== null
+        ? calculateActivityScore(player.currentPlays, activity)
+        : 0;
+      if (activity !== null) {
+        player.usedActivities.push(activity);
       }
 
-      player.activityScore = calculateActivityScore(
-        player.currentPlays,
-        activity,
-      );
       player.roundScore =
         player.throwScore +
         player.animalScore +

@@ -15,8 +15,12 @@ export default class Player {
 
   currentPlays: Card[] = [];
   hand: Card[] = [];
+
   selectedCard: Card | null = null;
   selectedActivity: Activity | null = null;
+  activitySelectionMade = false;
+
+  usedActivities: Activity[] = [];
 
   drawCard(deck: Card[]): void {
     if (this.hand.length < HAND_SIZE) {
@@ -34,6 +38,7 @@ export default class Player {
 
   reset(): void {
     this.totalScore = 0;
+    this.usedActivities = [];
     this.resetRound();
   }
 
@@ -50,5 +55,6 @@ export default class Player {
     this.hand = [];
     this.selectedCard = null;
     this.selectedActivity = null;
+    this.activitySelectionMade = false;
   }
 }

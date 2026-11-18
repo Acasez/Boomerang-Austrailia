@@ -7,25 +7,25 @@ interface PlayedCardDisplayProps {
   ownPlayerId: number | null;
   rows: PlayedCardsRow[];
   activityScoring: boolean;
-  activityScored: boolean;
   activityProgress: { readyCount: number; playerCount: number } | null;
   onSelectActivity: (activity: Activity) => void;
+  onSkipActivity: () => void;
 }
 
 export default function PlayedCardDisplay({
   rows,
   ownPlayerId,
   activityScoring,
-  activityScored,
   activityProgress,
   onSelectActivity,
+  onSkipActivity,
 }: PlayedCardDisplayProps) {
   return (
     <div className="bg-green-200 rounded-xl px-3 pb-3">
       <h1 className="text-2xl underline mb-2 bg-green-100 p-1">Played Cards</h1>
       {activityScoring && (
         <p className="mb-2">
-          Choose an activity to score.
+          Choose an unused activity to score, or skip this round.
           {activityProgress &&
             ` Players selected: ${activityProgress.readyCount}/${activityProgress.playerCount}.`}
         </p>
@@ -37,8 +37,8 @@ export default function PlayedCardDisplay({
               player={row.player}
               ownPlayerId={ownPlayerId}
               activityScoring={activityScoring}
-              activityScored={activityScored}
               onSelectActivity={onSelectActivity}
+              onSkipActivity={onSkipActivity}
             />
             <div className="flex flex-row flex-nowrap gap-4 overflow-x-auto">
               {row.cards.map((card, index) => (

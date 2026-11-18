@@ -12,4 +12,6 @@ export interface PlayerInfo {
   mapScore: number;
 
   selectedActivity: Activity | null;
+  activitySelectionMade: boolean;
+  usedActivities: Activity[];
 }

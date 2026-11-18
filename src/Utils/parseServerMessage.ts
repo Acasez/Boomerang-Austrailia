@@ -30,6 +30,10 @@ function isActivity(value: unknown): value is Activity {
   );
 }
 
+function isActivityArray(value: unknown): value is Activity[] {
+  return Array.isArray(value) && value.every(isActivity);
+}
+
 function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
   return (
     isRecord(value) &&
@@ -45,6 +49,8 @@ function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
     typeof value.player.mapScore === "number" &&
     (value.player.selectedActivity === null ||
       isActivity(value.player.selectedActivity)) &&
+    typeof value.player.activitySelectionMade === "boolean" &&
+    isActivityArray(value.player.usedActivities) &&
     isCardArray(value.cards)
   );
 }

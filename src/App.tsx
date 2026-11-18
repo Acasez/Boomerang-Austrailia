@@ -211,7 +211,7 @@ export default function App() {
     }
   };
 
-  const selectActivity = (activity: Activity) => {
+  const selectActivity = (activity: Activity | null) => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
       setGameError("Connect to the game server before choosing an activity.");
@@ -220,6 +220,10 @@ export default function App() {
 
     ws.send(JSON.stringify({ type: "selectActivity", activity }));
     setGameError(null);
+  };
+
+  const skipActivity = () => {
+    selectActivity(null);
   };
 
   return (
@@ -248,9 +252,9 @@ export default function App() {
           ownPlayerId={myId}
           rows={playedRows}
           activityScoring={activityScoring}
-          activityScored={activityScored}
           activityProgress={activityProgress}
           onSelectActivity={selectActivity}
+          onSkipActivity={skipActivity}
         />
       </div>
     </>
