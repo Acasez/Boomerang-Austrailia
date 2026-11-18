@@ -1,6 +1,7 @@
 import cards from "@/Data/cards";
 import { ACTIVITIES } from "@/consts/activities";
 import { HAND_SIZE } from "@/consts/handsize";
+import { GAME_ROUNDS } from "@/consts/rounds";
 import type { Activity, Card } from "@/Types/Card";
 import {
   calculateActivityScore,
@@ -24,16 +25,16 @@ export default class Game {
 
   started = false;
 
-  setupHands(deck: Card[]): void {
-    const cardsNeeded = this.players.length * HAND_SIZE;
+  setupHands(deck: Card[], players: Player[] = this.players): void {
+    const cardsNeeded = players.length * HAND_SIZE;
 
     if (deck.length < cardsNeeded) {
       throw new Error(
-        `Cannot deal ${HAND_SIZE} cards to ${this.players.length} player(s): only ${deck.length} cards remain.`,
+        `Cannot deal ${HAND_SIZE} cards to ${players.length} player(s): only ${deck.length} cards remain.`,
       );
     }
 
-    for (const player of this.players) {
+    for (const player of players) {
       for (let i = 0; i < HAND_SIZE; i++) {
         player.drawCard(deck);
       }
@@ -41,7 +42,7 @@ export default class Game {
   }
 
   startGame(): void {
-    const deck = [...cards];
+    const deck = this.shuffleDeck([...cards]);
     if (this.players.length > MAX_PLAYERS) {
       throw new Error(`Cannot start a game with more than ${MAX_PLAYERS}.`);
     }
@@ -59,6 +60,7 @@ export default class Game {
     this.setupHands(this.deck);
     this.activePlayers = [...this.players];
     this.turnNumber = 0;
+    this.round = 1;
     this.activityScoringComplete = false;
     this.started = true;
   }
@@ -147,11 +149,35 @@ export default class Game {
         player.animalScore +
         player.collectionScore +
         player.activityScore;
-      player.totalScore = player.roundScore;
+      player.totalScore += player.roundScore;
     }
 
     this.activityScoringComplete = true;
+    if (this.round < GAME_ROUNDS) {
+      this.startNextRound();
+    }
     return true;
+  }
+
+  private startNextRound(): void {
+    this.round++;
+    for (const player of this.activePlayers) {
+      player.resetRound();
+    }
+
+    this.deck = this.shuffleDeck([...cards]);
+    this.discardPile = [];
+    this.setupHands(this.deck, this.activePlayers);
+    this.turnNumber = 0;
+    this.activityScoringComplete = false;
+  }
+
+  private shuffleDeck(deck: Card[]): Card[] {
+    for (let index = deck.length - 1; index > 0; index--) {
+      const swapIndex = Math.floor(Math.random() * (index + 1));
+      [deck[index], deck[swapIndex]] = [deck[swapIndex]!, deck[index]!];
+    }
+    return deck;
   }
 
   removePlayer(player: Player): Card[] | null {

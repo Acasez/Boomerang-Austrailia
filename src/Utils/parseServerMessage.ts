@@ -75,13 +75,34 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
         isCardArray(value.hand) &&
         isPlayedCardsRowArray(value.playedRows) &&
         typeof value.turnNumber === "number" &&
-        Number.isInteger(value.turnNumber)
+        Number.isInteger(value.turnNumber) &&
+        typeof value.round === "number" &&
+        Number.isInteger(value.round)
       ) {
         return {
           type: "gameStarted",
           hand: value.hand,
           playedRows: value.playedRows,
           turnNumber: value.turnNumber,
+          round: value.round,
+        };
+      }
+      return null;
+    case "roundStarted":
+      if (
+        isCardArray(value.hand) &&
+        isPlayedCardsRowArray(value.playedRows) &&
+        typeof value.turnNumber === "number" &&
+        Number.isInteger(value.turnNumber) &&
+        typeof value.round === "number" &&
+        Number.isInteger(value.round)
+      ) {
+        return {
+          type: "roundStarted",
+          hand: value.hand,
+          playedRows: value.playedRows,
+          turnNumber: value.turnNumber,
+          round: value.round,
         };
       }
       return null;

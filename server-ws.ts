@@ -129,6 +129,23 @@ function broadcastActivityScored(): void {
   }
 }
 
+function broadcastRoundStarted(): void {
+  const playedRows = getPlayedRows();
+  for (const [clientSocket, client] of clients) {
+    if (!game.activePlayers.includes(client.player)) continue;
+
+    clientSocket.send(
+      JSON.stringify({
+        type: "roundStarted",
+        hand: client.player.hand,
+        playedRows,
+        turnNumber: game.turnNumber,
+        round: game.round,
+      }),
+    );
+  }
+}
+
 function broadcastResolvedTurn(): void {
   const playedRows = getPlayedRows();
   for (const [clientSocket, client] of clients) {
@@ -189,6 +206,7 @@ Bun.serve({
               hand: connectedClient.player.hand,
               playedRows: getPlayedRows(),
               turnNumber: game.turnNumber,
+              round: game.round,
             }),
           );
         }
@@ -259,8 +277,13 @@ Bun.serve({
         }
 
         try {
+          const previousRound = game.round;
           if (game.selectActivity(client.player, request.activity)) {
-            broadcastActivityScored();
+            if (game.round !== previousRound) {
+              broadcastRoundStarted();
+            } else {
+              broadcastActivityScored();
+            }
           } else {
             broadcastActivityScoringProgress();
           }
@@ -285,10 +308,13 @@ Bun.serve({
       if (!client) return;
 
       clients.delete(ws);
+      const previousRound = game.round;
       const activityScoringWasComplete = game.activityScoringComplete;
       const playedCards = game.removePlayer(client.player);
       if (playedCards) {
         broadcastResolvedTurn();
+      } else if (game.round !== previousRound) {
+        broadcastRoundStarted();
       } else if (!activityScoringWasComplete && game.activityScoringComplete) {
         broadcastActivityScored();
       } else if (

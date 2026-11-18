@@ -34,6 +34,10 @@ export default class Player {
 
   reset(): void {
     this.totalScore = 0;
+    this.resetRound();
+  }
+
+  resetRound(): void {
     this.roundScore = 0;
 
     this.throwScore = 0;

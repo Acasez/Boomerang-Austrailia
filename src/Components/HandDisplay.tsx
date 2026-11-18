@@ -7,6 +7,7 @@ interface HandDisplayProps {
   gameStarted: boolean;
   hasHand: boolean;
   gameOver: boolean;
+  activityScored: boolean;
   selectionProgress: { readyCount: number; playerCount: number } | null;
 }
 
@@ -16,6 +17,7 @@ export default function HandDisplay({
   gameStarted,
   hasHand,
   gameOver,
+  activityScored,
   selectionProgress,
 }: HandDisplayProps) {
   const canSelect = gameStarted && hasHand && !gameOver;
@@ -40,7 +42,12 @@ export default function HandDisplay({
           {selectionProgress.playerCount} selected.
         </p>
       )}
-      {gameOver && <p>All cards have been played. Restart to play again.</p>}
+      {gameOver &&
+        (activityScored ? (
+          <p>Game complete. Restart to play again.</p>
+        ) : (
+          <p>All cards have been played. Choose an activity to score.</p>
+        ))}
       <div className="flex flex-wrap gap-1 mt-5">
         {player.hand.map((card, index) => (
           <CardComponent

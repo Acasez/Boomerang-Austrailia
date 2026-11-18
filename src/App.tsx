@@ -23,6 +23,7 @@ export default function App() {
   const [gameOver, setGameOver] = useState(false);
   const [playedRows, setPlayedRows] = useState<PlayedCardsRow[]>([]);
   const [turnNumber, setTurnNumber] = useState(0);
+  const [roundNumber, setRoundNumber] = useState(1);
   const [selectionProgress, setSelectionProgress] = useState<{
     readyCount: number;
     playerCount: number;
@@ -44,6 +45,7 @@ export default function App() {
         setGameOver(false);
         setPlayedRows([]);
         setTurnNumber(0);
+        setRoundNumber(1);
         setSelectionProgress(null);
         setActivityScoring(false);
         setActivityScored(false);
@@ -59,6 +61,23 @@ export default function App() {
         setGameOver(false);
         setPlayedRows(message.playedRows);
         setTurnNumber(message.turnNumber);
+        setRoundNumber(message.round);
+        setSelectionProgress(null);
+        setActivityScoring(false);
+        setActivityScored(false);
+        setActivityProgress(null);
+        setGameError(null);
+        return;
+      }
+      case "roundStarted": {
+        const player = new Player();
+        player.hand = message.hand;
+        setPlayerState({ player });
+        setHasHand(true);
+        setGameOver(false);
+        setPlayedRows(message.playedRows);
+        setTurnNumber(message.turnNumber);
+        setRoundNumber(message.round);
         setSelectionProgress(null);
         setActivityScoring(false);
         setActivityScored(false);
@@ -209,7 +228,7 @@ export default function App() {
         gameStarted={gameStarted}
         disabled={myId === null}
         onStartGame={startGame}
-        roundNumber={1}
+        roundNumber={roundNumber}
       />
       <div className="mx-auto p-3 pt-1 text-center bg-gray-100">
         <div className="flex flex-row gap-5">
@@ -220,6 +239,7 @@ export default function App() {
             gameStarted={gameStarted}
             hasHand={hasHand}
             gameOver={gameOver}
+            activityScored={activityScored}
             selectionProgress={selectionProgress}
           />
         </div>

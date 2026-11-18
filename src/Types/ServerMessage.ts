@@ -13,6 +13,14 @@ export type ServerMessage =
       hand: Card[];
       playedRows: PlayedCardsRow[];
       turnNumber: number;
+      round: number;
+    }
+  | {
+      type: "roundStarted";
+      hand: Card[];
+      playedRows: PlayedCardsRow[];
+      turnNumber: number;
+      round: number;
     }
   | { type: "selectionProgress"; readyCount: number; playerCount: number }
   | {
