@@ -7,17 +7,9 @@ import Tooltip from "./Tooltip";
 
 interface CardMarkerProps {
   symbol: Collection | Animal | Activity;
-  scoringMarker: boolean;
-  scored: boolean;
-  selected: boolean;
 }
 
-export default function CardMarker({
-  symbol,
-  scoringMarker,
-  scored,
-  selected,
-}: CardMarkerProps) {
+export default function CardMarker({ symbol }: CardMarkerProps) {
   const detail = [
     ...ANIMAL_DETAILS,
     ...COLLECTION_DETAILS,
@@ -34,7 +26,7 @@ export default function CardMarker({
   return (
     <Tooltip content={symbol}>
       <div
-        className={`bg-gray-100 border-y-4 border-red-500 rounded-lg w-10 h-10 flex justify-center ${selected ? "ring-4 ring-blue-600" : ""}`}
+        className={`bg-gray-100 border-y-4 border-red-500 rounded-lg w-10 h-10 flex justify-center`}
       >
         <img src={image} alt={symbol} className="h-8 w-8 object-contain" />
       </div>

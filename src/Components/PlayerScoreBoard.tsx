@@ -1,7 +1,6 @@
 import type { PlayerInfo } from "@/Types/PlayerInfo";
-import CardMarker from "./CardMarker";
-import type { Activity } from "@/Types/Card";
 import { ACTIVITIES } from "@/consts/activities";
+import ActivityScoreMarker from "./ActivityScoreMarker";
 
 interface PlayerScoreBoardProps {
   player: PlayerInfo;
@@ -12,7 +11,7 @@ export default function PlayerScoreBoard({ player }: PlayerScoreBoardProps) {
     <div className="flex flex-row gap-2">
       <div className="flex flex-col gap-1.5">
         {ACTIVITIES.map((symbol) => (
-          <CardMarker
+          <ActivityScoreMarker
             key={symbol}
             symbol={symbol}
             scoringMarker={false}
