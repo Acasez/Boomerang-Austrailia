@@ -1,5 +1,6 @@
 import { HAND_SIZE } from "@/consts/handsize";
-import type { Card } from "@/Types/Card";
+import { ACTIVITY_SCORE_TABLE } from "@/consts/activities";
+import type { Activity, Card } from "@/Types/Card";
 import { ANIMAL_DETAILS } from "@/consts/animals";
 import {
   COLLECTION_DETAILS,
@@ -45,6 +46,16 @@ export function calculateThrowScore(playedCards: Card[]): number {
     score += Math.abs(
       playedCards[0]!.throwValue - playedCards[HAND_SIZE - 1]!.throwValue,
     );
-  //Todo Score for locations
   return score;
+}
+
+export function calculateActivityScore(
+  playedCards: Card[],
+  activity: Activity,
+): number {
+  const count = playedCards.filter((card) => card.activity === activity).length;
+  return ACTIVITY_SCORE_TABLE.reduce(
+    (score, entry) => (count >= entry.amount ? entry.score : score),
+    0,
+  );
 }

@@ -16,8 +16,7 @@ export default class Player {
   currentPlays: Card[] = [];
   hand: Card[] = [];
   selectedCard: Card | null = null;
-
-  usedActivities: Activity[] = [];
+  selectedActivity: Activity | null = null;
 
   drawCard(deck: Card[]): void {
     if (this.hand.length < HAND_SIZE) {
@@ -46,5 +45,6 @@ export default class Player {
     this.currentPlays = [];
     this.hand = [];
     this.selectedCard = null;
+    this.selectedActivity = null;
   }
 }

@@ -23,6 +23,13 @@ export type ServerMessage =
       roundNumber: number;
       gameOver: boolean;
     }
+  | {
+      type: "activityScoringProgress";
+      readyCount: number;
+      playerCount: number;
+      playedRows: PlayedCardsRow[];
+    }
+  | { type: "activityScored"; playedRows: PlayedCardsRow[] }
   | { type: "error"; message: string }
   | { type: "selectionError"; message: string }
   | { type: "chat"; senderId: number; text: string };

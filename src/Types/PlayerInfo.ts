@@ -7,6 +7,7 @@ export interface PlayerInfo {
   throwScore: number;
   animalScore: number;
   collectionScore: number;
+  activityScore: number;
 
-  scoredActivities: Activity[];
+  selectedActivity: Activity | null;
 }

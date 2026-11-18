@@ -1,7 +1,9 @@
 import cards from "@/Data/cards";
+import { ACTIVITIES } from "@/consts/activities";
 import { HAND_SIZE } from "@/consts/handsize";
-import type { Card } from "@/Types/Card";
+import type { Activity, Card } from "@/Types/Card";
 import {
+  calculateActivityScore,
   calculateAnimalScore,
   calculateCollectionScore,
   calculateThrowScore,
@@ -16,6 +18,7 @@ export default class Game {
   players: Player[] = [];
   activePlayers: Player[] = [];
   roundNumber = 0;
+  activityScoringComplete = false;
 
   started = false;
 
@@ -52,6 +55,7 @@ export default class Game {
     this.setupHands(this.deck);
     this.activePlayers = [...this.players];
     this.roundNumber = 0;
+    this.activityScoringComplete = false;
     this.started = true;
   }
 
@@ -94,6 +98,55 @@ export default class Game {
     return this.resolveRound();
   }
 
+  selectActivity(player: Player, activity: Activity): boolean {
+    if (
+      !this.started ||
+      this.activityScoringComplete ||
+      this.activePlayers.length === 0 ||
+      !this.activePlayers.includes(player) ||
+      this.activePlayers.some((activePlayer) => activePlayer.hand.length > 0)
+    ) {
+      throw new Error("Activity scoring is not available yet.");
+    }
+
+    if (!(ACTIVITIES as readonly string[]).includes(activity)) {
+      throw new Error("Invalid activity selected.");
+    }
+
+    player.selectedActivity = activity;
+    return this.completeActivityScoringIfReady();
+  }
+
+  completeActivityScoringIfReady(): boolean {
+    if (
+      this.activityScoringComplete ||
+      this.activePlayers.length === 0 ||
+      this.activePlayers.some(
+        (player) => player.hand.length > 0 || player.selectedActivity === null,
+      )
+    ) {
+      return false;
+    }
+
+    for (const player of this.activePlayers) {
+      const activity = player.selectedActivity;
+      if (activity === null) {
+        throw new Error("Cannot score activities until everyone has selected.");
+      }
+
+      player.activityScore = calculateActivityScore(player.currentPlays, activity);
+      player.roundScore =
+        player.throwScore +
+        player.animalScore +
+        player.collectionScore +
+        player.activityScore;
+      player.totalScore = player.roundScore;
+    }
+
+    this.activityScoringComplete = true;
+    return true;
+  }
+
   removePlayer(player: Player): Card[] | null {
     const playerIndex = this.players.indexOf(player);
     if (playerIndex !== -1) {
@@ -113,6 +166,8 @@ export default class Game {
     ) {
       return this.resolveRound();
     }
+
+    this.completeActivityScoringIfReady();
     return null;
   }
 

@@ -3,6 +3,7 @@ import "./index.css";
 import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
+import type { Activity } from "./Types/Card";
 import type { PlayedCardsRow, ServerMessage } from "./Types/ServerMessage";
 import { parseServerMessage } from "./Utils/parseServerMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
@@ -26,6 +27,12 @@ export default function App() {
     readyCount: number;
     playerCount: number;
   } | null>(null);
+  const [activityScoring, setActivityScoring] = useState(false);
+  const [activityScored, setActivityScored] = useState(false);
+  const [activityProgress, setActivityProgress] = useState<{
+    readyCount: number;
+    playerCount: number;
+  } | null>(null);
 
   const handleServerMessage = useCallback((message: ServerMessage) => {
     switch (message.type) {
@@ -38,6 +45,9 @@ export default function App() {
         setPlayedRows([]);
         setRoundNumber(0);
         setSelectionProgress(null);
+        setActivityScoring(false);
+        setActivityScored(false);
+        setActivityProgress(null);
         setGameError(null);
         return;
       case "gameStarted": {
@@ -50,6 +60,9 @@ export default function App() {
         setPlayedRows(message.playedRows);
         setRoundNumber(message.roundNumber);
         setSelectionProgress(null);
+        setActivityScoring(false);
+        setActivityScored(false);
+        setActivityProgress(null);
         setGameError(null);
         return;
       }
@@ -69,9 +82,27 @@ export default function App() {
         setRoundNumber(message.roundNumber);
         setSelectionProgress(null);
         setGameOver(message.gameOver);
+        setActivityScoring(message.gameOver);
+        setActivityScored(false);
+        setActivityProgress(null);
         setGameError(null);
         return;
       }
+      case "activityScoringProgress":
+        setPlayedRows(message.playedRows);
+        setActivityScoring(true);
+        setActivityProgress({
+          readyCount: message.readyCount,
+          playerCount: message.playerCount,
+        });
+        return;
+      case "activityScored":
+        setPlayedRows(message.playedRows);
+        setActivityScoring(false);
+        setActivityScored(true);
+        setActivityProgress(null);
+        setGameError(null);
+        return;
       case "error":
         setGameError(message.message);
         return;
@@ -161,6 +192,17 @@ export default function App() {
     }
   };
 
+  const selectActivity = (activity: Activity) => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      setGameError("Connect to the game server before choosing an activity.");
+      return;
+    }
+
+    ws.send(JSON.stringify({ type: "selectActivity", activity }));
+    setGameError(null);
+  };
+
   return (
     <>
       <Header
@@ -181,7 +223,14 @@ export default function App() {
           />
         </div>
         {gameError && <p role="alert">{gameError}</p>}
-        <PlayedCardDisplay ownPlayerId={myId} rows={playedRows} />
+        <PlayedCardDisplay
+          ownPlayerId={myId}
+          rows={playedRows}
+          activityScoring={activityScoring}
+          activityScored={activityScored}
+          activityProgress={activityProgress}
+          onSelectActivity={selectActivity}
+        />
       </div>
     </>
   );

@@ -1,7 +1,9 @@
 import type { ServerWebSocket } from "bun";
+import { ACTIVITIES } from "./src/consts/activities";
 import Game from "./src/classes/Game";
 import Player from "./src/classes/Player";
-import type { PlayerInfo } from "@/Types/PlayerInfo";
+import type { Activity } from "./src/Types/Card";
+import type { PlayedCardsRow } from "./src/Types/ServerMessage";
 
 const clients = new Map<ServerWebSocket, { id: number; player: Player }>();
 const game = new Game();
@@ -24,6 +26,13 @@ function isHandIndex(value: unknown): value is number | null {
   );
 }
 
+function isActivity(value: unknown): value is Activity {
+  return (
+    typeof value === "string" &&
+    (ACTIVITIES as readonly string[]).includes(value)
+  );
+}
+
 function broadcastSelectionProgress(): void {
   const readyCount = game.activePlayers.filter(
     (player) => player.selectedCard !== null,
@@ -41,10 +50,7 @@ function broadcastSelectionProgress(): void {
   }
 }
 
-function getPlayedRows(): {
-  player: PlayerInfo;
-  cards: Player["currentPlays"];
-}[] {
+function getPlayedRows(): PlayedCardsRow[] {
   return game.activePlayers.map((player) => {
     const connectedClient = Array.from(clients.values()).find(
       (client) => client.player === player,
@@ -60,7 +66,8 @@ function getPlayedRows(): {
         throwScore: player.throwScore,
         animalScore: player.animalScore,
         collectionScore: player.collectionScore,
-        scoredActivities: player.usedActivities,
+        activityScore: player.activityScore,
+        selectedActivity: player.selectedActivity,
       },
       cards: player.currentPlays,
     };
@@ -70,10 +77,7 @@ function getPlayedRows(): {
 function sendResolvedRound(
   clientSocket: ServerWebSocket,
   client: { id: number; player: Player },
-  playedRows: {
-    player: { id: number; score: number };
-    cards: Player["currentPlays"];
-  }[],
+  playedRows: PlayedCardsRow[],
 ): void {
   const gameOver = game.activePlayers.every(
     (player) => player.hand.length === 0,
@@ -88,6 +92,37 @@ function sendResolvedRound(
       gameOver,
     }),
   );
+}
+
+function broadcastActivityScoringProgress(): void {
+  const readyCount = game.activePlayers.filter(
+    (player) => player.selectedActivity !== null,
+  ).length;
+  const payload = JSON.stringify({
+    type: "activityScoringProgress",
+    readyCount,
+    playerCount: game.activePlayers.length,
+    playedRows: getPlayedRows(),
+  });
+
+  for (const [clientSocket, client] of clients) {
+    if (game.activePlayers.includes(client.player)) {
+      clientSocket.send(payload);
+    }
+  }
+}
+
+function broadcastActivityScored(): void {
+  const payload = JSON.stringify({
+    type: "activityScored",
+    playedRows: getPlayedRows(),
+  });
+
+  for (const [clientSocket, client] of clients) {
+    if (game.activePlayers.includes(client.player)) {
+      clientSocket.send(payload);
+    }
+  }
 }
 
 function broadcastResolvedRound(): void {
@@ -208,6 +243,30 @@ Bun.serve({
         return;
       }
 
+      if (isMessageType(request, "selectActivity")) {
+        if (!isActivity(request.activity)) {
+          ws.send(
+            JSON.stringify({
+              type: "error",
+              message: "The selected activity is invalid.",
+            }),
+          );
+          return;
+        }
+
+        try {
+          if (game.selectActivity(client.player, request.activity)) {
+            broadcastActivityScored();
+          } else {
+            broadcastActivityScoringProgress();
+          }
+        } catch (error) {
+          if (!(error instanceof Error)) throw error;
+          ws.send(JSON.stringify({ type: "error", message: error.message }));
+        }
+        return;
+      }
+
       const payload = JSON.stringify({
         type: "chat",
         senderId: client.id,
@@ -222,9 +281,21 @@ Bun.serve({
       if (!client) return;
 
       clients.delete(ws);
+      const activityScoringWasComplete = game.activityScoringComplete;
       const playedCards = game.removePlayer(client.player);
       if (playedCards) {
         broadcastResolvedRound();
+      } else if (
+        !activityScoringWasComplete &&
+        game.activityScoringComplete
+      ) {
+        broadcastActivityScored();
+      } else if (
+        game.started &&
+        game.activePlayers.length > 0 &&
+        game.activePlayers.every((player) => player.hand.length === 0)
+      ) {
+        broadcastActivityScoringProgress();
       } else {
         broadcastSelectionProgress();
       }

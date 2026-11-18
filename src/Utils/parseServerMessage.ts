@@ -1,4 +1,5 @@
-import type { Card } from "@/Types/Card";
+import type { Activity, Card } from "@/Types/Card";
+import { ACTIVITIES } from "@/consts/activities";
 import type { PlayedCardsRow, ServerMessage } from "@/Types/ServerMessage";
 
 const CARD_TRAITS = ["collection", "animal", "activity"] as const;
@@ -22,6 +23,13 @@ function isCardArray(value: unknown): value is Card[] {
   return Array.isArray(value) && value.every(isCard);
 }
 
+function isActivity(value: unknown): value is Activity {
+  return (
+    typeof value === "string" &&
+    (ACTIVITIES as readonly string[]).includes(value)
+  );
+}
+
 function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
   return (
     isRecord(value) &&
@@ -29,6 +37,12 @@ function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
     typeof value.player.id === "number" &&
     Number.isInteger(value.player.id) &&
     typeof value.player.score === "number" &&
+    typeof value.player.throwScore === "number" &&
+    typeof value.player.animalScore === "number" &&
+    typeof value.player.collectionScore === "number" &&
+    typeof value.player.activityScore === "number" &&
+    (value.player.selectedActivity === null ||
+      isActivity(value.player.selectedActivity)) &&
     isCardArray(value.cards)
   );
 }
@@ -100,6 +114,27 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
           roundNumber: value.roundNumber,
           gameOver: value.gameOver,
         };
+      }
+      return null;
+    case "activityScoringProgress":
+      if (
+        typeof value.readyCount === "number" &&
+        Number.isInteger(value.readyCount) &&
+        typeof value.playerCount === "number" &&
+        Number.isInteger(value.playerCount) &&
+        isPlayedCardsRowArray(value.playedRows)
+      ) {
+        return {
+          type: "activityScoringProgress",
+          readyCount: value.readyCount,
+          playerCount: value.playerCount,
+          playedRows: value.playedRows,
+        };
+      }
+      return null;
+    case "activityScored":
+      if (isPlayedCardsRowArray(value.playedRows)) {
+        return { type: "activityScored", playedRows: value.playedRows };
       }
       return null;
     case "error":
