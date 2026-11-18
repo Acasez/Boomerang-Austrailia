@@ -3,6 +3,7 @@ import { ACTIVITY_DETAILS } from "@/consts/activities";
 import { ANIMAL_DETAILS } from "@/consts/animals";
 import { COLLECTION_DETAILS } from "@/consts/collections";
 import { MARKER_IMAGES } from "../consts/symbolIcons";
+import Tooltip from "./Tooltip";
 
 interface CardMarkerProps {
   symbol: Collection | Animal | Activity;
@@ -23,8 +24,10 @@ export default function CardMarker({ symbol }: CardMarkerProps) {
     throw new Error(`No image configured for marker "${detail.image}".`);
 
   return (
-    <div className="bg-amber-100 border-y-4 border-red-500 rounded-lg w-10 h-10 flex justify-center">
-      <img src={image} alt={symbol} className="h-8 w-8 object-contain" />
-    </div>
+    <Tooltip content={symbol}>
+      <div className="bg-gray-100 border-y-4 border-red-500 rounded-lg w-10 h-10 flex justify-center">
+        <img src={image} alt={symbol} className="h-8 w-8 object-contain" />
+      </div>
+    </Tooltip>
   );
 }
