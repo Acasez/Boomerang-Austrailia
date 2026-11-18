@@ -12,8 +12,8 @@ export default function PlayedCardDisplay({
   ownPlayerId,
 }: PlayedCardDisplayProps) {
   return (
-    <div className="bg-green-200 rounded-xl p-3">
-      <h1 className="text-2xl underline mb-2">Played Cards</h1>
+    <div className="bg-green-200 rounded-xl px-3 pb-3">
+      <h1 className="text-2xl underline mb-2 bg-green-100 p-1">Played Cards</h1>
       <div className="flex flex-col gap-4">
         {rows.map((row) => (
           <div key={row.player.id} className="flex items-center gap-4">
