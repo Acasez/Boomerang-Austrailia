@@ -42,7 +42,13 @@ export default function CardComponent({
             <div>
               <div className="flex flex-col gap-2 mb-5">
                 {getMarkers(card).map((symbol) => (
-                  <CardMarker key={symbol} symbol={symbol} />
+                  <CardMarker
+                    key={symbol}
+                    symbol={symbol}
+                    scoringMarker={false}
+                    scored={false}
+                    selected={false}
+                  />
                 ))}
               </div>
               <div className="border-3 border-white rounded-4xl text-3xl w-10 h-10 text-center justify-center mb-5">

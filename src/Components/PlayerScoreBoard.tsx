@@ -12,7 +12,13 @@ export default function PlayerScoreBoard({ player }: PlayerScoreBoardProps) {
     <div className="flex flex-row gap-2">
       <div className="flex flex-col gap-1.5">
         {ACTIVITIES.map((symbol) => (
-          <CardMarker key={symbol} symbol={symbol} />
+          <CardMarker
+            key={symbol}
+            symbol={symbol}
+            scoringMarker={false}
+            scored={false}
+            selected={false}
+          />
         ))}
       </div>
       <div key={player.id} className="flex items-center gap-4">

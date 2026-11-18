@@ -60,6 +60,7 @@ function getPlayedRows(): {
         throwScore: player.throwScore,
         animalScore: player.animalScore,
         collectionScore: player.collectionScore,
+        scoredActivities: player.usedActivities,
       },
       cards: player.currentPlays,
     };
