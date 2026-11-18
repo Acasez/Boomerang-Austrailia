@@ -9,6 +9,7 @@ import {
   calculateThrowScore,
 } from "@/Utils/calculateScores";
 import type Player from "./Player";
+import { MAX_PLAYERS } from "@/consts/playerCounts";
 
 export default class Game {
   deck: Card[] = [...cards];
@@ -18,6 +19,7 @@ export default class Game {
   players: Player[] = [];
   activePlayers: Player[] = [];
   turnNumber = 0;
+  round = 1;
   activityScoringComplete = false;
 
   started = false;
@@ -40,12 +42,14 @@ export default class Game {
 
   startGame(): void {
     const deck = [...cards];
+    if (this.players.length > MAX_PLAYERS) {
+      throw new Error(`Cannot start a game with more than ${MAX_PLAYERS}.`);
+    }
     if (deck.length < this.players.length * HAND_SIZE) {
       throw new Error(
         `Cannot start a game with ${this.players.length} player(s): only ${deck.length} cards are available.`,
       );
     }
-
     for (const player of this.players) {
       player.reset();
     }

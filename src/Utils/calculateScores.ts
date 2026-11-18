@@ -11,7 +11,6 @@ import {
 export function calculateCollectionScore(playedCards: Card[]): number {
   let score = 0;
 
-  //Todo Score for collections
   for (const item of COLLECTION_DETAILS) {
     const collectionCount = playedCards.filter(
       (card) => card.collection === item.name,

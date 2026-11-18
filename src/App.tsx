@@ -209,6 +209,7 @@ export default function App() {
         gameStarted={gameStarted}
         disabled={myId === null}
         onStartGame={startGame}
+        roundNumber={1}
       />
       <div className="mx-auto p-3 pt-1 text-center bg-gray-100">
         <div className="flex flex-row gap-5">
