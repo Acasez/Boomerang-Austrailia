@@ -17,7 +17,7 @@ export default class Game {
 
   players: Player[] = [];
   activePlayers: Player[] = [];
-  roundNumber = 0;
+  turnNumber = 0;
   activityScoringComplete = false;
 
   started = false;
@@ -54,7 +54,7 @@ export default class Game {
     this.discardPile = [];
     this.setupHands(this.deck);
     this.activePlayers = [...this.players];
-    this.roundNumber = 0;
+    this.turnNumber = 0;
     this.activityScoringComplete = false;
     this.started = true;
   }
@@ -62,14 +62,14 @@ export default class Game {
   selectCard(
     player: Player,
     handIndex: number | null,
-    roundNumber: number,
+    turnNumber: number,
   ): Card[] | null {
     if (!this.started || !this.activePlayers.includes(player)) {
       throw new Error("This player is not in the active game.");
     }
 
-    if (roundNumber !== this.roundNumber) {
-      throw new Error("This selection belongs to a different round.");
+    if (turnNumber !== this.turnNumber) {
+      throw new Error("This selection belongs to a different turn.");
     }
 
     if (handIndex === null) {
@@ -95,7 +95,7 @@ export default class Game {
       return null;
     }
 
-    return this.resolveRound();
+    return this.resolveTurn();
   }
 
   selectActivity(player: Player, activity: Activity): boolean {
@@ -134,7 +134,10 @@ export default class Game {
         throw new Error("Cannot score activities until everyone has selected.");
       }
 
-      player.activityScore = calculateActivityScore(player.currentPlays, activity);
+      player.activityScore = calculateActivityScore(
+        player.currentPlays,
+        activity,
+      );
       player.roundScore =
         player.throwScore +
         player.animalScore +
@@ -164,14 +167,14 @@ export default class Game {
         (activePlayer) => activePlayer.selectedCard !== null,
       )
     ) {
-      return this.resolveRound();
+      return this.resolveTurn();
     }
 
     this.completeActivityScoringIfReady();
     return null;
   }
 
-  private resolveRound(): Card[] {
+  private resolveTurn(): Card[] {
     const playedCards: Card[] = [];
     const remainingHands: Card[][] = [];
 
@@ -179,7 +182,7 @@ export default class Game {
       const selectedCard = player.selectedCard;
       if (!selectedCard) {
         throw new Error(
-          "Cannot resolve a round while a player has not selected.",
+          "Cannot resolve a turn while a player has not selected.",
         );
       }
 
@@ -216,7 +219,7 @@ export default class Game {
       nextPlayer.hand = hand;
     }
 
-    this.roundNumber++;
+    this.turnNumber++;
     return playedCards;
   }
 }

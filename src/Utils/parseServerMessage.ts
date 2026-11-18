@@ -36,11 +36,13 @@ function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
     isRecord(value.player) &&
     typeof value.player.id === "number" &&
     Number.isInteger(value.player.id) &&
-    typeof value.player.score === "number" &&
+    typeof value.player.totalScore === "number" &&
+    typeof value.player.roundScore === "number" &&
     typeof value.player.throwScore === "number" &&
     typeof value.player.animalScore === "number" &&
     typeof value.player.collectionScore === "number" &&
     typeof value.player.activityScore === "number" &&
+    typeof value.player.mapScore === "number" &&
     (value.player.selectedActivity === null ||
       isActivity(value.player.selectedActivity)) &&
     isCardArray(value.cards)
@@ -72,14 +74,14 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
       if (
         isCardArray(value.hand) &&
         isPlayedCardsRowArray(value.playedRows) &&
-        typeof value.roundNumber === "number" &&
-        Number.isInteger(value.roundNumber)
+        typeof value.turnNumber === "number" &&
+        Number.isInteger(value.turnNumber)
       ) {
         return {
           type: "gameStarted",
           hand: value.hand,
           playedRows: value.playedRows,
-          roundNumber: value.roundNumber,
+          turnNumber: value.turnNumber,
         };
       }
       return null;
@@ -97,21 +99,21 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
         };
       }
       return null;
-    case "roundResolved":
+    case "turnResolved":
       if (
         isCardArray(value.hand) &&
         isCardArray(value.currentPlays) &&
         isPlayedCardsRowArray(value.playedRows) &&
-        typeof value.roundNumber === "number" &&
-        Number.isInteger(value.roundNumber) &&
+        typeof value.turnNumber === "number" &&
+        Number.isInteger(value.turnNumber) &&
         typeof value.gameOver === "boolean"
       ) {
         return {
-          type: "roundResolved",
+          type: "turnResolved",
           hand: value.hand,
           currentPlays: value.currentPlays,
           playedRows: value.playedRows,
-          roundNumber: value.roundNumber,
+          turnNumber: value.turnNumber,
           gameOver: value.gameOver,
         };
       }

@@ -78,7 +78,7 @@ function getPlayedRows(): PlayedCardsRow[] {
   });
 }
 
-function sendResolvedRound(
+function sendResolvedTurn(
   clientSocket: ServerWebSocket,
   client: { id: number; player: Player },
   playedRows: PlayedCardsRow[],
@@ -88,11 +88,11 @@ function sendResolvedRound(
   );
   clientSocket.send(
     JSON.stringify({
-      type: "roundResolved",
+      type: "turnResolved",
       hand: client.player.hand,
       currentPlays: client.player.currentPlays,
       playedRows,
-      roundNumber: game.roundNumber,
+      turnNumber: game.turnNumber,
       gameOver,
     }),
   );
@@ -129,11 +129,11 @@ function broadcastActivityScored(): void {
   }
 }
 
-function broadcastResolvedRound(): void {
+function broadcastResolvedTurn(): void {
   const playedRows = getPlayedRows();
   for (const [clientSocket, client] of clients) {
     if (!game.activePlayers.includes(client.player)) continue;
-    sendResolvedRound(clientSocket, client, playedRows);
+    sendResolvedTurn(clientSocket, client, playedRows);
   }
 }
 
@@ -188,7 +188,7 @@ Bun.serve({
               type: "gameStarted",
               hand: connectedClient.player.hand,
               playedRows: getPlayedRows(),
-              roundNumber: game.roundNumber,
+              turnNumber: game.turnNumber,
             }),
           );
         }
@@ -197,11 +197,11 @@ Bun.serve({
 
       if (isMessageType(request, "selectCard")) {
         const handIndex = request.handIndex;
-        const roundNumber = request.roundNumber;
+        const turnNumber = request.turnNumber;
         if (
           !isHandIndex(handIndex) ||
-          typeof roundNumber !== "number" ||
-          !Number.isInteger(roundNumber)
+          typeof turnNumber !== "number" ||
+          !Number.isInteger(turnNumber)
         ) {
           ws.send(
             JSON.stringify({
@@ -222,8 +222,8 @@ Bun.serve({
           return;
         }
 
-        if (roundNumber !== game.roundNumber) {
-          sendResolvedRound(ws, client, getPlayedRows());
+        if (turnNumber !== game.turnNumber) {
+          sendResolvedTurn(ws, client, getPlayedRows());
           return;
         }
 
@@ -231,10 +231,10 @@ Bun.serve({
           const playedCards = game.selectCard(
             client.player,
             handIndex,
-            roundNumber,
+            turnNumber,
           );
           if (playedCards) {
-            broadcastResolvedRound();
+            broadcastResolvedTurn();
           } else {
             broadcastSelectionProgress();
           }
@@ -288,7 +288,7 @@ Bun.serve({
       const activityScoringWasComplete = game.activityScoringComplete;
       const playedCards = game.removePlayer(client.player);
       if (playedCards) {
-        broadcastResolvedRound();
+        broadcastResolvedTurn();
       } else if (!activityScoringWasComplete && game.activityScoringComplete) {
         broadcastActivityScored();
       } else if (

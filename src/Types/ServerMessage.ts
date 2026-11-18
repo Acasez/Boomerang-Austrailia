@@ -12,15 +12,15 @@ export type ServerMessage =
       type: "gameStarted";
       hand: Card[];
       playedRows: PlayedCardsRow[];
-      roundNumber: number;
+      turnNumber: number;
     }
   | { type: "selectionProgress"; readyCount: number; playerCount: number }
   | {
-      type: "roundResolved";
+      type: "turnResolved";
       hand: Card[];
       currentPlays: Card[];
       playedRows: PlayedCardsRow[];
-      roundNumber: number;
+      turnNumber: number;
       gameOver: boolean;
     }
   | {

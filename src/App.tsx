@@ -22,7 +22,7 @@ export default function App() {
   const [hasHand, setHasHand] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [playedRows, setPlayedRows] = useState<PlayedCardsRow[]>([]);
-  const [roundNumber, setRoundNumber] = useState(0);
+  const [turnNumber, setTurnNumber] = useState(0);
   const [selectionProgress, setSelectionProgress] = useState<{
     readyCount: number;
     playerCount: number;
@@ -43,7 +43,7 @@ export default function App() {
         setHasHand(false);
         setGameOver(false);
         setPlayedRows([]);
-        setRoundNumber(0);
+        setTurnNumber(0);
         setSelectionProgress(null);
         setActivityScoring(false);
         setActivityScored(false);
@@ -58,7 +58,7 @@ export default function App() {
         setHasHand(true);
         setGameOver(false);
         setPlayedRows(message.playedRows);
-        setRoundNumber(message.roundNumber);
+        setTurnNumber(message.turnNumber);
         setSelectionProgress(null);
         setActivityScoring(false);
         setActivityScored(false);
@@ -72,14 +72,14 @@ export default function App() {
           playerCount: message.playerCount,
         });
         return;
-      case "roundResolved": {
+      case "turnResolved": {
         const player = new Player();
         player.hand = message.hand;
         player.currentPlays = message.currentPlays;
         setPlayerState({ player });
         setHasHand(true);
         setPlayedRows(message.playedRows);
-        setRoundNumber(message.roundNumber);
+        setTurnNumber(message.turnNumber);
         setSelectionProgress(null);
         setGameOver(message.gameOver);
         setActivityScoring(message.gameOver);
@@ -180,7 +180,7 @@ export default function App() {
         JSON.stringify({
           type: "selectCard",
           handIndex: nextSelection === null ? null : handIndex,
-          roundNumber,
+          turnNumber,
         }),
       );
       player.selectCard(nextSelection);
