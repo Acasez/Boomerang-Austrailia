@@ -27,7 +27,7 @@ export default function CardComponent({
   return (
     <button
       type="button"
-      className={`w-52 h-70 rounded-2xl bg-pink-200 text-white flex flex-row ${selected ? "-mt-5 ring-4 ring-blue-600" : ""}`}
+      className={`w-50 h-65 rounded-2xl bg-pink-200 text-white flex flex-row ${selected ? "-mt-5 ring-4 ring-blue-600" : ""}`}
       onClick={onSelect}
       disabled={!onSelect}
     >
@@ -35,7 +35,7 @@ export default function CardComponent({
         <div></div>
       ) : (
         <>
-          <div className="flex flex-col flex-1 justify-between m-4">
+          <div className="flex flex-col flex-1 justify-between my-2 ml-2">
             <div className="border-2 border-red-700 rounded-4xl bg-white text-red-700 text-2xl w-10 text-center">
               <p>{card.throwValue}</p>
             </div>
@@ -50,8 +50,8 @@ export default function CardComponent({
               </div>
             </div>
           </div>
-          <div className="flex flex-col flex-10 justify-end m-2 mb-5">
-            <div className="bg-blue-400 rounded-2xl mr-4">
+          <div className="flex flex-col flex-10 justify-end ml-2 mb-3 p-0.5">
+            <div className="bg-blue-400 rounded-2xl mr-2 p-0.5">
               <h1 className="text-lg align-middle font-bold">{card.name}</h1>
               <p>{card.region}</p>
             </div>
