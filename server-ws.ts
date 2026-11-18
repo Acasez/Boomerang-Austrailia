@@ -62,11 +62,15 @@ function getPlayedRows(): PlayedCardsRow[] {
     return {
       player: {
         id: connectedClient.id,
-        score: player.roundScore,
+        totalScore: player.totalScore,
+
+        roundScore: player.roundScore,
         throwScore: player.throwScore,
         animalScore: player.animalScore,
         collectionScore: player.collectionScore,
         activityScore: player.activityScore,
+        mapScore: player.mapScore,
+
         selectedActivity: player.selectedActivity,
       },
       cards: player.currentPlays,
@@ -285,10 +289,7 @@ Bun.serve({
       const playedCards = game.removePlayer(client.player);
       if (playedCards) {
         broadcastResolvedRound();
-      } else if (
-        !activityScoringWasComplete &&
-        game.activityScoringComplete
-      ) {
+      } else if (!activityScoringWasComplete && game.activityScoringComplete) {
         broadcastActivityScored();
       } else if (
         game.started &&
