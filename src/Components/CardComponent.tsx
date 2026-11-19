@@ -11,6 +11,7 @@ interface CardProps {
   onSelect?: () => void;
   selected: boolean;
   hidden: boolean;
+  visitedSite?: boolean;
 }
 
 function getMarkers(card: Card): MarkerSymbol[] {
@@ -24,6 +25,7 @@ export default function CardComponent({
   onSelect,
   selected,
   hidden,
+  visitedSite,
 }: CardProps) {
   const region = regions.find((item) => item.name === card.region);
   if (!region) {
@@ -52,7 +54,9 @@ export default function CardComponent({
                   <CardMarker key={symbol} symbol={symbol} />
                 ))}
               </div>
-              <div className="border-3 border-white rounded-4xl text-3xl w-10 h-10 text-center justify-center mb-5">
+              <div
+                className={`border-3 rounded-4xl text-3xl w-10 h-10 text-center justify-center mb-5 ${visitedSite ? "border-green-500" : "border-white"}`}
+              >
                 <p>{card.site}</p>
               </div>
             </div>

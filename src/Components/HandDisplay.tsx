@@ -56,6 +56,7 @@ export default function HandDisplay({
             onSelect={canSelect ? () => onSelectCard(index) : undefined}
             selected={player.selectedCard === card}
             hidden={false}
+            visitedSite={player.visitedSites.includes(card.site)}
           />
         ))}
       </div>

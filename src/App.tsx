@@ -3,16 +3,26 @@ import "./index.css";
 import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
-import type { Activity } from "./Types/Card";
+import type { Activity, Site } from "./Types/Card";
 import type { PlayedCardsRow, ServerMessage } from "./Types/ServerMessage";
 import { parseServerMessage } from "./Utils/parseServerMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 import Player from "./classes/Player";
 import Header from "./Components/Header";
 
+function getVisitedSitesForPlayer(
+  rows: PlayedCardsRow[],
+  playerId: number | null,
+): Site[] {
+  return (
+    rows.find((row) => row.player.id === playerId)?.player.visitedSites ?? []
+  );
+}
+
 export default function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [myId, setMyId] = useState<number | null>(null);
+  const myIdRef = useRef<number | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
   const [playerState, setPlayerState] = useState(() => ({
     player: new Player(),
@@ -38,6 +48,7 @@ export default function App() {
   const handleServerMessage = useCallback((message: ServerMessage) => {
     switch (message.type) {
       case "welcome":
+        myIdRef.current = message.playerId;
         setMyId(message.playerId);
         setPlayerState({ player: new Player() });
         setGameStarted(message.gameStarted);
@@ -55,6 +66,10 @@ export default function App() {
       case "gameStarted": {
         const player = new Player();
         player.hand = message.hand;
+        player.visitedSites = getVisitedSitesForPlayer(
+          message.playedRows,
+          myIdRef.current,
+        );
         setPlayerState({ player });
         setGameStarted(true);
         setHasHand(true);
@@ -72,6 +87,10 @@ export default function App() {
       case "roundStarted": {
         const player = new Player();
         player.hand = message.hand;
+        player.visitedSites = getVisitedSitesForPlayer(
+          message.playedRows,
+          myIdRef.current,
+        );
         setPlayerState({ player });
         setHasHand(true);
         setGameOver(false);
@@ -95,6 +114,10 @@ export default function App() {
         const player = new Player();
         player.hand = message.hand;
         player.currentPlays = message.currentPlays;
+        player.visitedSites = getVisitedSitesForPlayer(
+          message.playedRows,
+          myIdRef.current,
+        );
         setPlayerState({ player });
         setHasHand(true);
         setPlayedRows(message.playedRows);
@@ -131,6 +154,7 @@ export default function App() {
           player.hand = current.player.hand;
           player.currentPlays = current.player.currentPlays;
           player.roundScore = current.player.roundScore;
+          player.visitedSites = current.player.visitedSites;
           return { player };
         });
         setGameError(message.message);

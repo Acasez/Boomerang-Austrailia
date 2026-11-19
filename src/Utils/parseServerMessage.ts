@@ -1,8 +1,12 @@
-import type { Activity, Card } from "@/Types/Card";
+import type { Activity, Card, Site } from "@/Types/Card";
 import { ACTIVITIES } from "@/consts/activities";
+import regions from "@/Data/regions";
 import type { PlayedCardsRow, ServerMessage } from "@/Types/ServerMessage";
 
 const CARD_TRAITS = ["collection", "animal", "activity"] as const;
+const SITE_NAMES = new Set<string>(
+  regions.flatMap((region) => region.sites),
+);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -34,6 +38,13 @@ function isActivityArray(value: unknown): value is Activity[] {
   return Array.isArray(value) && value.every(isActivity);
 }
 
+function isSiteArray(value: unknown): value is Site[] {
+  return (
+    Array.isArray(value) &&
+    value.every((site) => typeof site === "string" && SITE_NAMES.has(site))
+  );
+}
+
 function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
   return (
     isRecord(value) &&
@@ -47,6 +58,7 @@ function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
     typeof value.player.collectionScore === "number" &&
     typeof value.player.activityScore === "number" &&
     typeof value.player.mapScore === "number" &&
+    isSiteArray(value.player.visitedSites) &&
     (value.player.selectedActivity === null ||
       isActivity(value.player.selectedActivity)) &&
     typeof value.player.activitySelectionMade === "boolean" &&

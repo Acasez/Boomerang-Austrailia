@@ -1,4 +1,4 @@
-import type { Activity } from "./Card";
+import type { Activity, Site } from "./Card";
 
 export interface PlayerInfo {
   id: number;
@@ -11,6 +11,7 @@ export interface PlayerInfo {
   activityScore: number;
   mapScore: number;
 
+  visitedSites: Site[];
   selectedActivity: Activity | null;
   activitySelectionMade: boolean;
   usedActivities: Activity[];

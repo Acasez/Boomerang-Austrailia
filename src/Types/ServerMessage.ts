@@ -1,4 +1,4 @@
-import type { Card } from "./Card";
+import type { Card, Site } from "./Card";
 import type { PlayerInfo } from "./PlayerInfo";
 
 export interface PlayedCardsRow {
