@@ -1,4 +1,5 @@
-import type { Activity, Site } from "./Card";
+import type { Activity } from "./Card";
+import type { Site } from "./Regions";
 
 export interface PlayerInfo {
   id: number;

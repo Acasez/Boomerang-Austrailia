@@ -1,5 +1,5 @@
 // data/regions.ts
-import type { Region, RegionName, Site } from "@/Types/Card";
+import type { Region, RegionName, Site } from "@/Types/Regions";
 import rawRegions from "../JSON/sites.json";
 
 export const regions: Region[] = rawRegions.map((raw) => {

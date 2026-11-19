@@ -1,5 +1,6 @@
 import { HAND_SIZE } from "@/consts/handsize";
-import type { Activity, Card, Site } from "@/Types/Card";
+import type { Activity, Card } from "@/Types/Card";
+import type { Site } from "@/Types/Regions";
 import { getRandomCard } from "@/Utils/CardUtils";
 
 export default class Player {

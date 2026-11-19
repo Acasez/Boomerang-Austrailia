@@ -1,6 +1,8 @@
 import cards from "@/Data/cards";
+import regions from "@/Data/regions";
 import { ACTIVITIES } from "@/consts/activities";
 import { HAND_SIZE } from "@/consts/handsize";
+import { REGION_CLAIM_POINTS } from "@/consts/regions";
 import { GAME_ROUNDS } from "@/consts/rounds";
 import type { Activity, Card } from "@/Types/Card";
 import {
@@ -11,6 +13,7 @@ import {
 } from "@/Utils/calculateScores";
 import type Player from "./Player";
 import { MAX_PLAYERS } from "@/consts/playerCounts";
+import type { Region } from "@/Types/Regions";
 
 export default class Game {
   deck: Card[] = [...cards];
@@ -22,6 +25,8 @@ export default class Game {
   turnNumber = 0;
   round = 1;
   activityScoringComplete = false;
+
+  claimedRegions: Region[] = [];
 
   started = false;
 
@@ -62,6 +67,7 @@ export default class Game {
     this.turnNumber = 0;
     this.round = 1;
     this.activityScoringComplete = false;
+    this.claimedRegions = [];
     this.started = true;
   }
 
@@ -144,9 +150,10 @@ export default class Game {
 
     for (const player of this.activePlayers) {
       const activity = player.selectedActivity;
-      player.activityScore = activity !== null
-        ? calculateActivityScore(player.currentPlays, activity)
-        : 0;
+      player.activityScore =
+        activity !== null
+          ? calculateActivityScore(player.currentPlays, activity)
+          : 0;
       if (activity !== null) {
         player.usedActivities.push(activity);
       }
@@ -265,6 +272,29 @@ export default class Game {
     }
 
     this.turnNumber++;
+    if (this.activePlayers.every((player) => player.hand.length === 0)) {
+      this.claimCompletedRegions();
+    }
+
     return playedCards;
+  }
+
+  private claimCompletedRegions(): void {
+    for (const region of regions) {
+      if (this.claimedRegions.some((claimed) => claimed.name === region.name)) {
+        continue;
+      }
+
+      const eligiblePlayers = this.activePlayers.filter((player) =>
+        region.sites.every((site) => player.visitedSites.includes(site)),
+      );
+      if (eligiblePlayers.length === 0) continue;
+
+      this.claimedRegions.push({ ...region, claimed: true });
+      for (const player of eligiblePlayers) {
+        player.mapScore += REGION_CLAIM_POINTS;
+        player.roundScore += REGION_CLAIM_POINTS;
+      }
+    }
   }
 }

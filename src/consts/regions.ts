@@ -7,3 +7,5 @@ export const REGIONS = [
   "Victoria",
   "Tasmania",
 ] as const;
+
+export const REGION_CLAIM_POINTS = 3 as const;

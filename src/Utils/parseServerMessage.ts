@@ -1,12 +1,11 @@
-import type { Activity, Card, Site } from "@/Types/Card";
+import type { Activity, Card } from "@/Types/Card";
 import { ACTIVITIES } from "@/consts/activities";
 import regions from "@/Data/regions";
 import type { PlayedCardsRow, ServerMessage } from "@/Types/ServerMessage";
+import type { Site } from "@/Types/Regions";
 
 const CARD_TRAITS = ["collection", "animal", "activity"] as const;
-const SITE_NAMES = new Set<string>(
-  regions.flatMap((region) => region.sites),
-);
+const SITE_NAMES = new Set<string>(regions.flatMap((region) => region.sites));
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

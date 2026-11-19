@@ -3,12 +3,13 @@ import "./index.css";
 import HandDisplay from "./Components/HandDisplay";
 import ChatBox from "./Components/ChatBox";
 import type { ChatMessage } from "./Types/ChatMessage";
-import type { Activity, Site } from "./Types/Card";
+import type { Activity } from "./Types/Card";
 import type { PlayedCardsRow, ServerMessage } from "./Types/ServerMessage";
 import { parseServerMessage } from "./Utils/parseServerMessage";
 import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 import Player from "./classes/Player";
 import Header from "./Components/Header";
+import type { Site } from "./Types/Regions";
 
 function getVisitedSitesForPlayer(
   rows: PlayedCardsRow[],
