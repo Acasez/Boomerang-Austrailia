@@ -14,6 +14,7 @@ export type Region = {
   name: RegionName;
   sites: Site[];
   color: string;
+  claimed: boolean;
 };
 
 export type Site =

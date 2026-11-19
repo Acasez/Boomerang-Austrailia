@@ -58,3 +58,9 @@ export function calculateActivityScore(
     0,
   );
 }
+
+export function calculateMapScore(playedCards: Card[]): number {
+  let score = 0;
+
+  return score;
+}

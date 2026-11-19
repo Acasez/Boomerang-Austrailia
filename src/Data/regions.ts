@@ -7,6 +7,7 @@ export const regions: Region[] = rawRegions.map((raw) => {
     ...raw,
     name: raw.name as RegionName,
     sites: raw.sites.split(",").map((site) => site.trim()) as Site[],
+    claimed: false,
   };
 });
 export default regions;
