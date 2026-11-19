@@ -1,4 +1,5 @@
 import type { Activity, Animal, Card, Collection } from "../Types/Card";
+import regions from "../Data/regions";
 import CardMarker from "./CardMarker";
 
 type MarkerSymbol = Collection | Animal | Activity;
@@ -24,10 +25,16 @@ export default function CardComponent({
   selected,
   hidden,
 }: CardProps) {
+  const region = regions.find((item) => item.name === card.region);
+  if (!region) {
+    throw new Error(`No region is configured for card "${card.name}".`);
+  }
+
   return (
     <button
       type="button"
       className={`w-50 h-65 rounded-2xl bg-pink-200 text-white flex flex-row ${selected ? "-mt-5 ring-4 ring-blue-600" : ""}`}
+      style={!hidden ? { backgroundColor: region.color } : undefined}
       onClick={onSelect}
       disabled={!onSelect}
     >

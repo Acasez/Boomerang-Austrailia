@@ -17,6 +17,25 @@ export type Region = {
   claimed: boolean;
 };
 
+export type RegionName =
+  | "Western Australia"
+  | "Northern Territory"
+  | "Queensland"
+  | "South Australia"
+  | "New South Wales"
+  | "Victoria"
+  | "Tasmania";
+
+export type Activity =
+  | "Swimming"
+  | "Bushwalking"
+  | "Indigenous Culture"
+  | "Sightseeing";
+
+export type Animal = "Kangaroos" | "Emus" | "Wombats" | "Koalas" | "Platypuses";
+
+export type Collection = "Leaves" | "Wildflowers" | "Shells" | "Souvenirs";
+
 export type Site =
   | "A"
   | "B"
@@ -45,22 +64,3 @@ export type Site =
   | "Å"
   | "Ä"
   | "Ö";
-
-export type RegionName =
-  | "Western Australia"
-  | "Northern Territory"
-  | "Queensland"
-  | "South Australia"
-  | "New South Wales"
-  | "Victoria"
-  | "Tasmania";
-
-export type Activity =
-  | "Swimming"
-  | "Bushwalking"
-  | "Indigenous Culture"
-  | "Sightseeing";
-
-export type Animal = "Kangaroos" | "Emus" | "Wombats" | "Koalas" | "Platypuses";
-
-export type Collection = "Leaves" | "Wildflowers" | "Shells" | "Souvenirs";
