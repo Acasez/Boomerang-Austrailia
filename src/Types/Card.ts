@@ -5,12 +5,47 @@ type CardTraits =
 
 export type Card = CardTraits & {
   name: string;
-  site: string;
-  region: Region;
+  site: Site;
+  region: RegionName;
   throwValue: number;
 };
 
-export type Region =
+export type Region = {
+  name: RegionName;
+  locations: Site[];
+  color: string;
+};
+
+export type Site =
+  | "A"
+  | "B"
+  | "C"
+  | "D"
+  | "E"
+  | "F"
+  | "G"
+  | "H"
+  | "I"
+  | "J"
+  | "K"
+  | "L"
+  | "M"
+  | "O"
+  | "P"
+  | "Q"
+  | "R"
+  | "S"
+  | "T"
+  | "U"
+  | "V"
+  | "X"
+  | "Y"
+  | "Z"
+  | "Å"
+  | "Ä"
+  | "Ö";
+
+export type RegionName =
   | "Western Australia"
   | "Northern Territory"
   | "Queensland"

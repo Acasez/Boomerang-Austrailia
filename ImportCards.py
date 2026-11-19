@@ -9,7 +9,8 @@ CREDENTIALS_FILE = r"C:/Users/Edvin/Documents/GoogleAPI/GoogleAPI.json"
 BUILD_DIR = "src/JSON"
 
 SHEETS = [
-    "Boomerang Australia"
+    "Boomerang Australia",
+    "Sites"
 ]
 
 SHEET_CONFIGS = []

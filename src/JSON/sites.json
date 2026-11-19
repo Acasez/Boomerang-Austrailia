@@ -1,0 +1,37 @@
+[
+    {
+        "name": "Western Australia",
+        "sites": "A, B, C, D",
+        "color": "#da8b6f"
+    },
+    {
+        "name": "Northern Territory",
+        "sites": "E, F, G, H",
+        "color": "#edba6a"
+    },
+    {
+        "name": "Queensland",
+        "sites": "I, J, K, L",
+        "color": "#efe27e"
+    },
+    {
+        "name": "South Australia",
+        "sites": "M, N, O, P",
+        "color": "#afcf69"
+    },
+    {
+        "name": "New South Wales",
+        "sites": "Q, R, S, T",
+        "color": "#38c8cf"
+    },
+    {
+        "name": "Victoria",
+        "sites": "U, V, X, Y",
+        "color": "#c69bc2"
+    },
+    {
+        "name": "Tasmania",
+        "sites": "Z, Å, Ä, Ö",
+        "color": "#887b9a"
+    }
+]
