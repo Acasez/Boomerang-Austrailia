@@ -60,6 +60,7 @@ export default function PlayerScoreBoard({
             Collection Score: {player.collectionScore}
           </h3>
           <h3 className="text-sm">Activity Score: {player.activityScore}</h3>
+          <h3 className="text-sm">Map Score: {player.mapScore}</h3>
           {activityScoring &&
             player.id === ownPlayerId &&
             player.activitySelectionMade && (

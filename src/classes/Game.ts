@@ -155,6 +155,7 @@ export default class Game {
         player.throwScore +
         player.animalScore +
         player.collectionScore +
+        player.mapScore +
         player.activityScore;
       player.totalScore += player.roundScore;
     }
@@ -230,6 +231,10 @@ export default class Game {
 
       player.hand.splice(cardIndex, 1);
       player.currentPlays.push(selectedCard);
+      if (!player.visitedSites.includes(selectedCard.site)) {
+        player.visitedSites.push(selectedCard.site);
+        player.mapScore++;
+      }
       player.selectedCard = null;
       playedCards.push(selectedCard);
       remainingHands.push(player.hand);
@@ -241,7 +246,10 @@ export default class Game {
       player.animalScore = calculateAnimalScore(player.currentPlays);
 
       player.roundScore =
-        player.throwScore + player.collectionScore + player.animalScore;
+        player.throwScore +
+        player.collectionScore +
+        player.animalScore +
+        player.mapScore;
     }
 
     for (let index = 0; index < this.activePlayers.length; index++) {
