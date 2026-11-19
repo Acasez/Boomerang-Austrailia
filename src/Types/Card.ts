@@ -12,7 +12,7 @@ export type Card = CardTraits & {
 
 export type Region = {
   name: RegionName;
-  locations: Site[];
+  sites: Site[];
   color: string;
 };
 
