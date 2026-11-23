@@ -1,9 +1,9 @@
 import type { ServerWebSocket } from "bun";
-import { ACTIVITIES } from "./src/consts/activities";
-import Game from "./src/classes/Game";
-import Player from "./src/classes/Player";
-import type { Activity } from "./src/Types/Card";
-import type { PlayedCardsRow } from "./src/Types/ServerMessage";
+import { ACTIVITIES } from "../src/consts/activities";
+import Game from "../src/classes/Game";
+import Player from "../src/classes/Player";
+import type { Activity } from "../src/Types/Card";
+import type { PlayedCardsRow } from "../src/Types/ServerMessage";
 
 const clients = new Map<ServerWebSocket, { id: number; player: Player }>();
 const game = new Game();
