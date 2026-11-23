@@ -2,6 +2,7 @@ import type { PlayerInfo } from "@/Types/PlayerInfo";
 import { ACTIVITIES } from "@/consts/activities";
 import ActivityScoreMarker from "./ActivityScoreMarker";
 import type { Activity } from "@/Types/Card";
+import SiteMarker from "./SiteMarker";
 
 interface PlayerScoreBoardProps {
   player: PlayerInfo;
@@ -47,7 +48,7 @@ export default function PlayerScoreBoard({
           </button>
         )}
       </div>
-      <div key={player.id} className="flex items-center gap-4">
+      <div key={player.id} className="flex flex-col items-center gap-2">
         <div className="bg-green-400 p-2 rounded-xl text-center">
           <h2 className="text-xl underline">Player {player.id}</h2>
           <h3>
@@ -70,6 +71,18 @@ export default function PlayerScoreBoard({
                   : "Skipping this round"}
               </p>
             )}
+        </div>
+        <div className="flex flex-wrap max-w-35 ml-3">
+          {[...player.visitedSites]
+            .sort((a, b) => a.localeCompare(b))
+            .map((site) => (
+              <SiteMarker
+                key={site}
+                site={site}
+                visitedSite={true}
+                inCollection={true}
+              />
+            ))}
         </div>
       </div>
     </div>

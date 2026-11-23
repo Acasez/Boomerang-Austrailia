@@ -1,6 +1,7 @@
 import type { Activity, Animal, Card, Collection } from "../Types/Card";
 import regions from "../Data/regions";
 import CardMarker from "./CardMarker";
+import SiteMarker from "./SiteMarker";
 
 type MarkerSymbol = Collection | Animal | Activity;
 
@@ -54,11 +55,11 @@ export default function CardComponent({
                   <CardMarker key={symbol} symbol={symbol} />
                 ))}
               </div>
-              <div
-                className={`border-3 rounded-4xl text-3xl w-10 h-10 text-center justify-center mb-5 ${visitedSite ? "border-green-500" : "border-white"}`}
-              >
-                <p>{card.site}</p>
-              </div>
+              <SiteMarker
+                site={card.site}
+                visitedSite={visitedSite!}
+                inCollection={false}
+              />
             </div>
           </div>
           <div className="flex flex-col flex-10 justify-end ml-2 mb-3 p-0.5">
