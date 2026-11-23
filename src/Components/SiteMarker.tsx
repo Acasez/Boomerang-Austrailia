@@ -1,5 +1,4 @@
 import type { Region, Site } from "@/Types/Regions";
-import { getRegionForSite } from "@/Data/regions";
 
 interface SiteMarkerProps {
   site: Site;
