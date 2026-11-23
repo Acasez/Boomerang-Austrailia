@@ -10,4 +10,9 @@ export const regions: Region[] = rawRegions.map((raw) => {
     claimed: false,
   };
 });
+
+export function getRegionForSite(site: Site): Region | undefined {
+  return regions.find((region) => region.sites.includes(site));
+}
+
 export default regions;
