@@ -292,6 +292,7 @@ export default class Game {
 
       this.claimedRegions.push({ ...region, claimed: true });
       for (const player of eligiblePlayers) {
+        player.claimedRegions.push(region.name);
         player.mapScore += REGION_CLAIM_POINTS;
         player.roundScore += REGION_CLAIM_POINTS;
       }

@@ -3,6 +3,8 @@ import { ACTIVITIES } from "@/consts/activities";
 import ActivityScoreMarker from "./ActivityScoreMarker";
 import type { Activity } from "@/Types/Card";
 import SiteMarker from "./SiteMarker";
+import RegionMarker from "./RegionMarker";
+import regions from "@/Data/regions";
 
 interface PlayerScoreBoardProps {
   player: PlayerInfo;
@@ -73,16 +75,14 @@ export default function PlayerScoreBoard({
             )}
         </div>
         <div className="flex flex-wrap max-w-35 ml-3">
-          {[...player.visitedSites]
-            .sort((a, b) => a.localeCompare(b))
-            .map((site) => (
-              <SiteMarker
-                key={site}
-                site={site}
-                visitedSite={true}
-                inCollection={true}
-              />
-            ))}
+          {regions.map((region) => (
+            <RegionMarker
+              key={region.name}
+              region={region}
+              player={player}
+              claimed={player.claimedRegions.includes(region.name)}
+            />
+          ))}
         </div>
       </div>
     </div>

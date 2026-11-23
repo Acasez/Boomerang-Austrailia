@@ -76,6 +76,7 @@ function getPlayedRows(): PlayedCardsRow[] {
         mapScore: player.mapScore,
 
         visitedSites: player.visitedSites,
+        claimedRegions: player.claimedRegions,
         selectedActivity: player.selectedActivity,
         activitySelectionMade: player.activitySelectionMade,
         usedActivities: player.usedActivities,

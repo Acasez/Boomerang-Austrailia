@@ -1,6 +1,6 @@
 import { HAND_SIZE } from "@/consts/handsize";
 import type { Activity, Card } from "@/Types/Card";
-import type { Site } from "@/Types/Regions";
+import type { RegionName, Site } from "@/Types/Regions";
 import { getRandomCard } from "@/Utils/CardUtils";
 
 export default class Player {
@@ -23,6 +23,7 @@ export default class Player {
 
   usedActivities: Activity[] = [];
   visitedSites: Site[] = [];
+  claimedRegions: RegionName[] = [];
 
   drawCard(deck: Card[]): void {
     if (this.hand.length < HAND_SIZE) {
@@ -42,6 +43,7 @@ export default class Player {
     this.totalScore = 0;
     this.usedActivities = [];
     this.visitedSites = [];
+    this.claimedRegions = [];
     this.resetRound();
   }
 

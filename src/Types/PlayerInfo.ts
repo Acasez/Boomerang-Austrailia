@@ -1,5 +1,5 @@
 import type { Activity } from "./Card";
-import type { Site } from "./Regions";
+import type { RegionName, Site } from "./Regions";
 
 export interface PlayerInfo {
   id: number;
@@ -13,6 +13,7 @@ export interface PlayerInfo {
   mapScore: number;
 
   visitedSites: Site[];
+  claimedRegions: RegionName[];
   selectedActivity: Activity | null;
   activitySelectionMade: boolean;
   usedActivities: Activity[];

@@ -59,6 +59,7 @@ export default function CardComponent({
                 site={card.site}
                 visitedSite={visitedSite!}
                 inCollection={false}
+                region={region}
               />
             </div>
           </div>
