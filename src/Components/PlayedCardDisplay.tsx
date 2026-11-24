@@ -32,9 +32,12 @@ export default function PlayedCardDisplay({
             ` Players selected: ${activityProgress.readyCount}/${activityProgress.playerCount}.`}
         </p>
       )}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         {rows.map((row) => (
-          <div key={row.player.id} className="flex items-center gap-4">
+          <div
+            key={row.player.id}
+            className="flex items-center gap-4 border-b-4 border-green-500 pb-1"
+          >
             <PlayerScoreBoard
               player={row.player}
               ownPlayerId={ownPlayerId}

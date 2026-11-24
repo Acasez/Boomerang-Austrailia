@@ -50,8 +50,10 @@ export default function PlayerScoreBoard({
           </button>
         )}
       </div>
-      <div key={player.id} className="flex flex-col items-center gap-2">
-        <div className="bg-green-400 p-2 rounded-xl text-center">
+      <div key={player.id} className="flex flex-col items-center gap-">
+        <div
+          className={`bg-green-500 p-2 rounded-xl text-center ${ownPlayerId == player.id ? "border-4 border-blue-400" : ""}`}
+        >
           <h2 className="text-xl underline">Player {player.id}</h2>
           <h3>
             Score: [<span className="text-blue-600">{player.totalScore}</span>]{" "}
