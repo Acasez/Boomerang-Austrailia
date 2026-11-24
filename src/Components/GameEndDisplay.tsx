@@ -13,12 +13,23 @@ export default function GameEndDisplay({
 }: GameEndDisplayProps) {
   if (!gameEnd || players.length === 0) return null;
 
+  const getTotalThrowScore = (player: PlayerInfo) =>
+    player.roundScores.reduce((total, round) => total + round.throwScore, 0);
   const rankedPlayers = [...players].sort(
-    (a, b) => b.totalScore - a.totalScore || a.id - b.id,
+    (a, b) =>
+      b.totalScore - a.totalScore ||
+      getTotalThrowScore(b) - getTotalThrowScore(a) ||
+      a.id - b.id,
   );
   const winningScore = rankedPlayers[0]!.totalScore;
-  const winners = rankedPlayers.filter(
+  const tiebreakNeeded = players.filter(
     (player) => player.totalScore === winningScore,
+  ).length > 1;
+  const winningThrowScore = getTotalThrowScore(rankedPlayers[0]!);
+  const winners = rankedPlayers.filter(
+    (player) =>
+      player.totalScore === winningScore &&
+      getTotalThrowScore(player) === winningThrowScore,
   );
 
   return (
@@ -41,6 +52,9 @@ export default function GameEndDisplay({
               {player.id === ownPlayerId ? " (You)" : ""}
             </span>
             <span>{player.totalScore} points</span>
+            {tiebreakNeeded && (
+              <span>Throw score: {getTotalThrowScore(player)}</span>
+            )}
           </li>
         ))}
       </ol>
