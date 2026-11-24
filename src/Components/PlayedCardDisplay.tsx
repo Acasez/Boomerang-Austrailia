@@ -20,6 +20,12 @@ export default function PlayedCardDisplay({
   onSelectActivity,
   onSkipActivity,
 }: PlayedCardDisplayProps) {
+  const orderedRows = [...rows].sort((a, b) => {
+    if (a.player.id === ownPlayerId) return -1;
+    if (b.player.id === ownPlayerId) return 1;
+    return a.player.id - b.player.id;
+  });
+
   return (
     <div className="bg-green-200 rounded-2xl px-3 pb-3 mt-5">
       <h1 className="text-2xl underline mb-2 bg-green-100 p-1 -mx-3 -mt-3 rounded-t-2xl px-3">
@@ -33,7 +39,7 @@ export default function PlayedCardDisplay({
         </p>
       )}
       <div className="flex flex-col gap-3">
-        {rows.map((row) => (
+        {orderedRows.map((row) => (
           <div
             key={row.player.id}
             className="flex items-center gap-4 border-b-4 border-green-500 pb-1"
