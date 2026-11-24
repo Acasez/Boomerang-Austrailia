@@ -1,4 +1,4 @@
-import { HAND_SIZE } from "@/consts/handsize";
+import { HAND_SIZE } from "@/consts/handSize";
 import { ACTIVITY_SCORE_TABLE } from "@/consts/activities";
 import type { Activity, Card } from "@/Types/Card";
 import { ANIMAL_DETAILS } from "@/consts/animals";

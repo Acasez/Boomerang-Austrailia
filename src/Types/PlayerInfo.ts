@@ -1,17 +1,12 @@
 import type { Activity } from "./Card";
 import type { RegionName, Site } from "./Regions";
+import type { RoundScores } from "./Scores";
 
 export interface PlayerInfo {
   id: number;
   totalScore: number;
 
-  roundScore: number;
-  throwScore: number;
-  animalScore: number;
-  collectionScore: number;
-  activityScore: number;
-  mapScore: number;
-
+  roundScores: RoundScores[];
   visitedSites: Site[];
   claimedRegions: RegionName[];
   selectedActivity: Activity | null;

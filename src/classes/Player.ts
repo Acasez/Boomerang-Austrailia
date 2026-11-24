@@ -1,18 +1,13 @@
 import { HAND_SIZE } from "@/consts/handSize";
 import type { Activity, Card } from "@/Types/Card";
 import type { RegionName, Site } from "@/Types/Regions";
+import type { RoundScores } from "@/Types/Scores";
 import { getRandomCard } from "@/Utils/CardUtils";
 
 export default class Player {
   totalScore = 0;
 
-  roundScore = 0;
-
-  throwScore = 0;
-  animalScore = 0;
-  collectionScore = 0;
-  activityScore = 0;
-  mapScore = 0;
+  roundScores: RoundScores[] = [];
 
   currentPlays: Card[] = [];
   hand: Card[] = [];
@@ -24,6 +19,15 @@ export default class Player {
   usedActivities: Activity[] = [];
   visitedSites: Site[] = [];
   claimedRegions: RegionName[] = [];
+
+  get currentRoundScore(): RoundScores {
+    const currentRoundScore = this.roundScores[this.roundScores.length - 1];
+    if (!currentRoundScore) {
+      throw new Error("The player has no active round score.");
+    }
+
+    return currentRoundScore;
+  }
 
   drawCard(deck: Card[]): void {
     if (this.hand.length < HAND_SIZE) {
@@ -44,17 +48,19 @@ export default class Player {
     this.usedActivities = [];
     this.visitedSites = [];
     this.claimedRegions = [];
+    this.roundScores = [];
     this.resetRound();
   }
 
   resetRound(): void {
-    this.roundScore = 0;
-
-    this.throwScore = 0;
-    this.animalScore = 0;
-    this.collectionScore = 0;
-    this.activityScore = 0;
-    this.mapScore = 0;
+    this.roundScores.push({
+      roundScore: 0,
+      throwScore: 0,
+      animalScore: 0,
+      collectionScore: 0,
+      activityScore: 0,
+      mapScore: 0,
+    });
 
     this.currentPlays = [];
     this.hand = [];

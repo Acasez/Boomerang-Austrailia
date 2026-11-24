@@ -22,6 +22,8 @@ export default function PlayerScoreBoard({
   onSkipActivity,
 }: PlayerScoreBoardProps) {
   const canSelect = activityScoring && player.id === ownPlayerId;
+  const currentRoundScore =
+    player.roundScores[player.roundScores.length - 1];
 
   return (
     <div className="flex flex-row gap-2">
@@ -57,15 +59,23 @@ export default function PlayerScoreBoard({
           <h2 className="text-xl underline">Player {player.id}</h2>
           <h3>
             Score: [<span className="text-blue-600">{player.totalScore}</span>]{" "}
-            + {player.roundScore}
+            + {currentRoundScore?.roundScore ?? 0}
           </h3>
-          <h3 className="text-sm">Throw Score: {player.throwScore}</h3>
-          <h3 className="text-sm">Animal Score: {player.animalScore}</h3>
           <h3 className="text-sm">
-            Collection Score: {player.collectionScore}
+            Throw Score: {currentRoundScore?.throwScore ?? 0}
           </h3>
-          <h3 className="text-sm">Activity Score: {player.activityScore}</h3>
-          <h3 className="text-sm">Map Score: {player.mapScore}</h3>
+          <h3 className="text-sm">
+            Animal Score: {currentRoundScore?.animalScore ?? 0}
+          </h3>
+          <h3 className="text-sm">
+            Collection Score: {currentRoundScore?.collectionScore ?? 0}
+          </h3>
+          <h3 className="text-sm">
+            Activity Score: {currentRoundScore?.activityScore ?? 0}
+          </h3>
+          <h3 className="text-sm">
+            Map Score: {currentRoundScore?.mapScore ?? 0}
+          </h3>
           {activityScoring &&
             player.id === ownPlayerId &&
             player.activitySelectionMade && (

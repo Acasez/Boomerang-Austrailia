@@ -3,6 +3,7 @@ import { ACTIVITIES } from "@/consts/activities";
 import regions from "@/Data/regions";
 import type { PlayedCardsRow, ServerMessage } from "@/Types/ServerMessage";
 import type { RegionName, Site } from "@/Types/Regions";
+import type { RoundScores } from "@/Types/Scores";
 
 const CARD_TRAITS = ["collection", "animal", "activity"] as const;
 const SITE_NAMES = new Set<string>(regions.flatMap((region) => region.sites));
@@ -55,6 +56,22 @@ function isRegionNameArray(value: unknown): value is RegionName[] {
   );
 }
 
+function isRoundScoresArray(value: unknown): value is RoundScores[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (score) =>
+        isRecord(score) &&
+        typeof score.roundScore === "number" &&
+        typeof score.throwScore === "number" &&
+        typeof score.animalScore === "number" &&
+        typeof score.collectionScore === "number" &&
+        typeof score.activityScore === "number" &&
+        typeof score.mapScore === "number",
+    )
+  );
+}
+
 function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
   return (
     isRecord(value) &&
@@ -62,12 +79,7 @@ function isPlayedCardsRow(value: unknown): value is PlayedCardsRow {
     typeof value.player.id === "number" &&
     Number.isInteger(value.player.id) &&
     typeof value.player.totalScore === "number" &&
-    typeof value.player.roundScore === "number" &&
-    typeof value.player.throwScore === "number" &&
-    typeof value.player.animalScore === "number" &&
-    typeof value.player.collectionScore === "number" &&
-    typeof value.player.activityScore === "number" &&
-    typeof value.player.mapScore === "number" &&
+    isRoundScoresArray(value.player.roundScores) &&
     isSiteArray(value.player.visitedSites) &&
     isRegionNameArray(value.player.claimedRegions) &&
     (value.player.selectedActivity === null ||

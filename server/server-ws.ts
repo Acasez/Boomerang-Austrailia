@@ -68,13 +68,7 @@ function getPlayedRows(): PlayedCardsRow[] {
         id: connectedClient.id,
         totalScore: player.totalScore,
 
-        roundScore: player.roundScore,
-        throwScore: player.throwScore,
-        animalScore: player.animalScore,
-        collectionScore: player.collectionScore,
-        activityScore: player.activityScore,
-        mapScore: player.mapScore,
-
+        roundScores: player.roundScores,
         visitedSites: player.visitedSites,
         claimedRegions: player.claimedRegions,
         selectedActivity: player.selectedActivity,

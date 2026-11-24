@@ -150,7 +150,8 @@ export default class Game {
 
     for (const player of this.activePlayers) {
       const activity = player.selectedActivity;
-      player.activityScore =
+      const roundScore = player.currentRoundScore;
+      roundScore.activityScore =
         activity !== null
           ? calculateActivityScore(player.currentPlays, activity)
           : 0;
@@ -158,13 +159,13 @@ export default class Game {
         player.usedActivities.push(activity);
       }
 
-      player.roundScore =
-        player.throwScore +
-        player.animalScore +
-        player.collectionScore +
-        player.mapScore +
-        player.activityScore;
-      player.totalScore += player.roundScore;
+      roundScore.roundScore =
+        roundScore.throwScore +
+        roundScore.animalScore +
+        roundScore.collectionScore +
+        roundScore.mapScore +
+        roundScore.activityScore;
+      player.totalScore += roundScore.roundScore;
     }
 
     this.activityScoringComplete = true;
@@ -240,7 +241,7 @@ export default class Game {
       player.currentPlays.push(selectedCard);
       if (!player.visitedSites.includes(selectedCard.site)) {
         player.visitedSites.push(selectedCard.site);
-        player.mapScore++;
+        player.currentRoundScore.mapScore++;
       }
       player.selectedCard = null;
       playedCards.push(selectedCard);
@@ -260,15 +261,16 @@ export default class Game {
     }
 
     for (const player of this.activePlayers) {
-      player.throwScore = calculateThrowScore(player.currentPlays);
-      player.collectionScore = calculateCollectionScore(player.currentPlays);
-      player.animalScore = calculateAnimalScore(player.currentPlays);
+      const roundScore = player.currentRoundScore;
+      roundScore.throwScore = calculateThrowScore(player.currentPlays);
+      roundScore.collectionScore = calculateCollectionScore(player.currentPlays);
+      roundScore.animalScore = calculateAnimalScore(player.currentPlays);
 
-      player.roundScore =
-        player.throwScore +
-        player.collectionScore +
-        player.animalScore +
-        player.mapScore;
+      roundScore.roundScore =
+        roundScore.throwScore +
+        roundScore.collectionScore +
+        roundScore.animalScore +
+        roundScore.mapScore;
     }
 
     this.turnNumber++;
@@ -292,9 +294,10 @@ export default class Game {
 
       this.claimedRegions.push({ ...region, claimed: true });
       for (const player of eligiblePlayers) {
+        const roundScore = player.currentRoundScore;
         player.claimedRegions.push(region.name);
-        player.mapScore += REGION_CLAIM_POINTS;
-        player.roundScore += REGION_CLAIM_POINTS;
+        roundScore.mapScore += REGION_CLAIM_POINTS;
+        roundScore.roundScore += REGION_CLAIM_POINTS;
       }
     }
   }

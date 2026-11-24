@@ -155,7 +155,7 @@ export default function App() {
           const player = new Player();
           player.hand = current.player.hand;
           player.currentPlays = current.player.currentPlays;
-          player.roundScore = current.player.roundScore;
+          player.roundScores = current.player.roundScores;
           player.visitedSites = current.player.visitedSites;
           return { player };
         });
