@@ -1,7 +1,7 @@
 import cards from "@/Data/cards";
 import regions from "@/Data/regions";
 import { ACTIVITIES } from "@/consts/activities";
-import { HAND_SIZE } from "@/consts/handsize";
+import { HAND_SIZE } from "@/consts/handSize";
 import { REGION_CLAIM_POINTS } from "@/consts/regions";
 import { GAME_ROUNDS } from "@/consts/rounds";
 import type { Activity, Card } from "@/Types/Card";
@@ -247,18 +247,6 @@ export default class Game {
       remainingHands.push(player.hand);
     }
 
-    for (const player of this.activePlayers) {
-      player.throwScore = calculateThrowScore(player.currentPlays);
-      player.collectionScore = calculateCollectionScore(player.currentPlays);
-      player.animalScore = calculateAnimalScore(player.currentPlays);
-
-      player.roundScore =
-        player.throwScore +
-        player.collectionScore +
-        player.animalScore +
-        player.mapScore;
-    }
-
     for (let index = 0; index < this.activePlayers.length; index++) {
       const player = this.activePlayers[index];
       const nextPlayer =
@@ -269,6 +257,18 @@ export default class Game {
       }
 
       nextPlayer.hand = hand;
+    }
+
+    for (const player of this.activePlayers) {
+      player.throwScore = calculateThrowScore(player.currentPlays);
+      player.collectionScore = calculateCollectionScore(player.currentPlays);
+      player.animalScore = calculateAnimalScore(player.currentPlays);
+
+      player.roundScore =
+        player.throwScore +
+        player.collectionScore +
+        player.animalScore +
+        player.mapScore;
     }
 
     this.turnNumber++;

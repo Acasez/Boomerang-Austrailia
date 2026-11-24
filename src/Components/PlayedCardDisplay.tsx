@@ -21,8 +21,10 @@ export default function PlayedCardDisplay({
   onSkipActivity,
 }: PlayedCardDisplayProps) {
   return (
-    <div className="bg-green-200 rounded-xl px-3 pb-3">
-      <h1 className="text-2xl underline mb-2 bg-green-100 p-1">Played Cards</h1>
+    <div className="bg-green-200 rounded-2xl px-3 pb-3 mt-5">
+      <h1 className="text-2xl underline mb-2 bg-green-100 p-1 -mx-3 -mt-3 rounded-t-2xl px-3">
+        Played Cards
+      </h1>
       {activityScoring && (
         <p className="mb-2">
           Choose an unused activity to score, or skip this round.
