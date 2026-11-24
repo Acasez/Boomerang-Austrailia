@@ -1,4 +1,4 @@
-import { HAND_SIZE } from "@/consts/handsize";
+import { HAND_SIZE } from "@/consts/handSize";
 import type { Activity, Card } from "@/Types/Card";
 import type { RegionName, Site } from "@/Types/Regions";
 import { getRandomCard } from "@/Utils/CardUtils";

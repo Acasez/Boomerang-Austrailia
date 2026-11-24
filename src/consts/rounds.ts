@@ -1,1 +1,1 @@
-export const GAME_ROUNDS = 4 as const;
+export const GAME_ROUNDS = 1 as const;

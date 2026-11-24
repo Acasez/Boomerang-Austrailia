@@ -10,6 +10,7 @@ import PlayedCardDisplay from "./Components/PlayedCardDisplay";
 import Player from "./classes/Player";
 import Header from "./Components/Header";
 import type { Site } from "./Types/Regions";
+import GameEndDisplay from "./Components/GameEndDisplay";
 
 function getVisitedSitesForPlayer(
   rows: PlayedCardsRow[],
@@ -270,6 +271,11 @@ export default function App() {
             gameOver={gameOver}
             activityScored={activityScored}
             selectionProgress={selectionProgress}
+          />
+          <GameEndDisplay
+            players={playedRows.map((row) => row.player)}
+            ownPlayerId={myId}
+            gameEnd={gameOver && activityScored}
           />
         </div>
         {gameError && <p role="alert">{gameError}</p>}
