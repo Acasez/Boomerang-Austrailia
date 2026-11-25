@@ -1,41 +1,16 @@
 import type { ServerWebSocket } from "bun";
-import { ACTIVITIES } from "../src/consts/activities";
 import Game from "../src/classes/Game";
 import Player from "../src/classes/Player";
-import type { Activity } from "../src/Types/Card";
 import type { PlayedCardsRow } from "../src/Types/ServerMessage";
+import {
+  isMessageType,
+  isHandIndex,
+  isActivityChoice,
+} from "./serverTypeChecks";
 
 const clients = new Map<ServerWebSocket, { id: number; player: Player }>();
 const game = new Game();
 let nextPlayerId = 1;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function isMessageType(
-  value: unknown,
-  type: string,
-): value is Record<string, unknown> {
-  return isRecord(value) && value.type === type;
-}
-
-function isHandIndex(value: unknown): value is number | null {
-  return (
-    value === null || (typeof value === "number" && Number.isInteger(value))
-  );
-}
-
-function isActivity(value: unknown): value is Activity {
-  return (
-    typeof value === "string" &&
-    (ACTIVITIES as readonly string[]).includes(value)
-  );
-}
-
-function isActivityChoice(value: unknown): value is Activity | null {
-  return value === null || isActivity(value);
-}
 
 function broadcastSelectionProgress(): void {
   const readyCount = game.activePlayers.filter(
