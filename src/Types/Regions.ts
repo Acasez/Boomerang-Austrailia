@@ -28,6 +28,7 @@ export type Site =
   | "K"
   | "L"
   | "M"
+  | "N"
   | "O"
   | "P"
   | "Q"
