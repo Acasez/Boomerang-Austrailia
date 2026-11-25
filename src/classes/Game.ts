@@ -18,8 +18,6 @@ import type { Region } from "@/Types/Regions";
 export default class Game {
   deck: Card[] = [...cards];
 
-  discardPile: Card[] = [];
-
   players: Player[] = [];
   activePlayers: Player[] = [];
   turnNumber = 0;
@@ -61,7 +59,6 @@ export default class Game {
     }
 
     this.deck = deck;
-    this.discardPile = [];
     this.setupHands(this.deck);
     this.activePlayers = [...this.players];
     this.turnNumber = 0;
@@ -182,7 +179,6 @@ export default class Game {
     }
 
     this.deck = this.shuffleDeck([...cards]);
-    this.discardPile = [];
     this.setupHands(this.deck, this.activePlayers);
     this.turnNumber = 0;
     this.activityScoringComplete = false;
@@ -263,7 +259,9 @@ export default class Game {
     for (const player of this.activePlayers) {
       const roundScore = player.currentRoundScore;
       roundScore.throwScore = calculateThrowScore(player.currentPlays);
-      roundScore.collectionScore = calculateCollectionScore(player.currentPlays);
+      roundScore.collectionScore = calculateCollectionScore(
+        player.currentPlays,
+      );
       roundScore.animalScore = calculateAnimalScore(player.currentPlays);
 
       roundScore.roundScore =
