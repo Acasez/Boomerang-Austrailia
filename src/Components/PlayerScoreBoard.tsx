@@ -5,6 +5,7 @@ import type { Activity } from "@/Types/Card";
 import SiteMarker from "./SiteMarker";
 import RegionMarker from "./RegionMarker";
 import regions from "@/Data/regions";
+import { SMALL_BAGGAGE_LIMIT } from "@/consts/collections";
 
 interface PlayerScoreBoardProps {
   player: PlayerInfo;
@@ -22,8 +23,7 @@ export default function PlayerScoreBoard({
   onSkipActivity,
 }: PlayerScoreBoardProps) {
   const canSelect = activityScoring && player.id === ownPlayerId;
-  const currentRoundScore =
-    player.roundScores[player.roundScores.length - 1];
+  const currentRoundScore = player.roundScores[player.roundScores.length - 1];
 
   return (
     <div className="flex flex-row gap-2">
@@ -68,7 +68,16 @@ export default function PlayerScoreBoard({
             Animal Score: {currentRoundScore?.animalScore ?? 0}
           </h3>
           <h3 className="text-sm">
-            Collection Score: {currentRoundScore?.collectionScore ?? 0}
+            Collection Score:{" "}
+            <span
+              className={
+                (currentRoundScore?.collectionScore ?? 0) <= SMALL_BAGGAGE_LIMIT
+                  ? "text-amber-400"
+                  : ""
+              }
+            >
+              {currentRoundScore?.collectionScore ?? 0}
+            </span>
           </h3>
           <h3 className="text-sm">
             Activity Score: {currentRoundScore?.activityScore ?? 0}
