@@ -12,7 +12,7 @@ import {
   calculateThrowScore,
 } from "@/Utils/calculateScores";
 import type Player from "./Player";
-import { MAX_PLAYERS } from "@/consts/playerCounts";
+import { MAX_PLAYERS, MIN_PLAYERS } from "@/consts/playerCounts";
 import type { Region } from "@/Types/Regions";
 
 export default class Game {
@@ -45,10 +45,16 @@ export default class Game {
   }
 
   startGame(): void {
-    const deck = this.shuffleDeck([...cards]);
-    if (this.players.length > MAX_PLAYERS) {
-      throw new Error(`Cannot start a game with more than ${MAX_PLAYERS}.`);
+    if (
+      this.players.length < MIN_PLAYERS ||
+      this.players.length > MAX_PLAYERS
+    ) {
+      throw new Error(
+        `Cannot start a game with fewer than ${MIN_PLAYERS} or more than ${MAX_PLAYERS} players.`,
+      );
     }
+
+    const deck = this.shuffleDeck([...cards]);
     if (deck.length < this.players.length * HAND_SIZE) {
       throw new Error(
         `Cannot start a game with ${this.players.length} player(s): only ${deck.length} cards are available.`,
