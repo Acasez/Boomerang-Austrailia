@@ -4,6 +4,8 @@ import Game from "@/classes/Game";
 import Player from "@/classes/Player";
 import { HAND_SIZE } from "@/consts/handSize";
 import { MAX_PLAYERS, MIN_PLAYERS } from "@/consts/playerCounts";
+import { REGION_CLAIM_POINTS } from "@/consts/regions";
+import { GAME_ROUNDS } from "@/consts/rounds";
 import type { Card } from "@/Types/Card";
 
 function createGame(playerCount: number): { game: Game; players: Player[] } {
@@ -13,9 +15,10 @@ function createGame(playerCount: number): { game: Game; players: Player[] } {
   return { game, players };
 }
 
-function createGameWithHands(
-  playerCount: number,
-): { game: Game; players: Player[] } {
+function createGameWithHands(playerCount: number): {
+  game: Game;
+  players: Player[];
+} {
   const { game, players } = createGame(playerCount);
   game.activePlayers = players;
   game.started = true;
@@ -37,6 +40,17 @@ function completeTurn(game: Game, players: Player[]): Card[] {
     throw new Error("The turn did not resolve after every player selected.");
   }
   return playedCards;
+}
+
+function swimmingCard(name: string): Card {
+  return {
+    name,
+    site: "A",
+    region: "Western Australia",
+    throwValue: 1,
+    animal: "Kangaroos",
+    activity: "Swimming",
+  };
 }
 
 test("only starts games with between two and four players", () => {
@@ -127,4 +141,91 @@ test("passes the last remaining card to the previous player", () => {
   expect(players[2]!.hand).toEqual([lastCards[0]!]);
   expect(players[0]!.hand).toEqual([lastCards[1]!]);
   expect(players[1]!.hand).toEqual([lastCards[2]!]);
+});
+
+test("scores all categories including map points, then starts the next round", () => {
+  const { game, players } = createGame(2);
+  game.startGame();
+
+  const firstPlayer = players[0]!;
+  const secondPlayer = players[1]!;
+  for (const player of players) {
+    player.hand = [];
+    player.currentPlays = [
+      swimmingCard(`${player === firstPlayer ? "First" : "Second"} 1`),
+      swimmingCard(`${player === firstPlayer ? "First" : "Second"} 2`),
+    ];
+  }
+
+  firstPlayer.currentRoundScore.throwScore = 2;
+  firstPlayer.currentRoundScore.animalScore = 3;
+  firstPlayer.currentRoundScore.collectionScore = 4;
+  firstPlayer.currentRoundScore.mapScore = REGION_CLAIM_POINTS;
+
+  expect(game.selectActivity(firstPlayer, "Swimming")).toBe(false);
+  expect(firstPlayer.totalScore).toBe(0);
+  expect(game.selectActivity(secondPlayer, null)).toBe(true);
+
+  expect(firstPlayer.roundScores[0]).toEqual({
+    roundScore: 13,
+    throwScore: 2,
+    animalScore: 3,
+    collectionScore: 4,
+    activityScore: 1,
+    mapScore: REGION_CLAIM_POINTS,
+  });
+  expect(firstPlayer.totalScore).toBe(13);
+  expect(game.round).toBe(2);
+  expect(game.turnNumber).toBe(0);
+  expect(game.activityScoringComplete).toBe(false);
+  expect(firstPlayer.roundScores).toHaveLength(2);
+  expect(firstPlayer.currentRoundScore.roundScore).toBe(0);
+  expect(firstPlayer.currentPlays).toEqual([]);
+  expect(firstPlayer.hand).toHaveLength(HAND_SIZE);
+});
+
+test("finishes after scoring round four and totals all category scores", () => {
+  const { game, players } = createGame(2);
+  game.startGame();
+
+  for (let round = 1; round <= GAME_ROUNDS; round++) {
+    players.forEach((player, index) => {
+      player.hand = [];
+      player.currentPlays = [];
+      player.currentRoundScore.throwScore = round + index;
+      player.currentRoundScore.animalScore = round * 2;
+      player.currentRoundScore.collectionScore = round * 3;
+      player.currentRoundScore.mapScore = REGION_CLAIM_POINTS;
+    });
+
+    expect(game.selectActivity(players[0]!, null)).toBe(false);
+    expect(game.selectActivity(players[1]!, null)).toBe(true);
+
+    if (round < GAME_ROUNDS) {
+      expect(game.round).toBe(round + 1);
+      expect(players[0]!.hand).toHaveLength(HAND_SIZE);
+    } else {
+      expect(game.round).toBe(GAME_ROUNDS);
+      expect(game.activityScoringComplete).toBe(true);
+      expect(players.every((player) => player.hand.length === 0)).toBe(true);
+    }
+  }
+
+  for (const player of players) {
+    expect(player.roundScores).toHaveLength(GAME_ROUNDS);
+    expect(player.totalScore).toBe(
+      player.roundScores.reduce((total, score) => total + score.roundScore, 0),
+    );
+    expect(
+      player.roundScores.every(
+        (score) =>
+          score.roundScore ===
+          score.throwScore +
+            score.animalScore +
+            score.collectionScore +
+            score.activityScore +
+            score.mapScore,
+      ),
+    ).toBe(true);
+  }
 });
