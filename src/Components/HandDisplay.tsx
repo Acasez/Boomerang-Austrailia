@@ -44,7 +44,9 @@ export default function HandDisplay({
       )}
       {gameOver &&
         (activityScored ? (
-          <p>Game complete. Restart to play again.</p>
+          <p>
+            Game complete. <br /> Restart to play again.
+          </p>
         ) : (
           <p>All cards have been played. Choose an activity to score.</p>
         ))}
