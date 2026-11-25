@@ -5,11 +5,11 @@ import { COLLECTION_DETAILS } from "@/consts/collections";
 import { MARKER_IMAGES } from "../consts/symbolIcons";
 import Tooltip from "./Tooltip";
 
-interface CardMarkerProps {
+interface CardSymbolProps {
   symbol: Collection | Animal | Activity;
 }
 
-export default function CardMarker({ symbol }: CardMarkerProps) {
+export default function CardSymbol({ symbol }: CardSymbolProps) {
   const detail = [
     ...ANIMAL_DETAILS,
     ...COLLECTION_DETAILS,

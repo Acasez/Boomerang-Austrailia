@@ -1,6 +1,6 @@
 import type { Activity, Animal, Card, Collection } from "../Types/Card";
 import regions from "../Data/regions";
-import CardMarker from "./CardMarker";
+import CardMarker from "./CardSymbol";
 import SiteMarker from "./SiteMarker";
 
 type MarkerSymbol = Collection | Animal | Activity;
