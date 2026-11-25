@@ -72,3 +72,33 @@ test("adds scores for different collections", () => {
 
   expect(calculateCollectionScore(cards)).toBe(8); // 2 + 6
 });
+
+test("doubles the total collection score when it is 7 or less", () => {
+  const belowLimit = [
+    collectionCard("Shells"),
+    collectionCard("Shells"),
+  ];
+  const atLimit = [
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Shells"),
+  ];
+
+  expect(calculateCollectionScore(belowLimit)).toBe(12); // 6 * 2
+  expect(calculateCollectionScore(atLimit)).toBe(14); // 7 * 2
+});
+
+test("does not double the total collection score when it is above 7", () => {
+  const cards = [
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Leaves"),
+    collectionCard("Shells"),
+  ];
+
+  expect(calculateCollectionScore(cards)).toBe(8); // 5 + 3
+});

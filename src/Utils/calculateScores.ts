@@ -15,13 +15,12 @@ export function calculateCollectionScore(playedCards: Card[]): number {
     const collectionCount = playedCards.filter(
       (card) => card.collection === item.name,
     ).length;
-    let collectionScore = collectionCount * item.score;
-    if (collectionScore >= SMALL_BAGGAGE_LIMIT)
-      collectionScore * SMALL_BAGGAGE_MULTIPLIER;
-    score += collectionScore;
+    score += collectionCount * item.score;
   }
 
-  return score;
+  return score <= SMALL_BAGGAGE_LIMIT
+    ? score * SMALL_BAGGAGE_MULTIPLIER
+    : score;
 }
 
 export function calculateAnimalScore(playedCards: Card[]): number {
