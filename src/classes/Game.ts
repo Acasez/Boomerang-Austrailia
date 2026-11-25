@@ -219,6 +219,9 @@ export default class Game {
   private resolveTurn(): Card[] {
     const playedCards: Card[] = [];
     const remainingHands: Card[][] = [];
+    const isFinalCardPass = this.activePlayers.every(
+      (player) => player.hand.length === 2,
+    );
 
     for (const player of this.activePlayers) {
       const selectedCard = player.selectedCard;
@@ -245,11 +248,12 @@ export default class Game {
     }
 
     for (let index = 0; index < this.activePlayers.length; index++) {
-      const player = this.activePlayers[index];
-      const nextPlayer =
-        this.activePlayers[(index + 1) % this.activePlayers.length];
+      const nextPlayerIndex = isFinalCardPass
+        ? (index - 1 + this.activePlayers.length) % this.activePlayers.length
+        : (index + 1) % this.activePlayers.length;
+      const nextPlayer = this.activePlayers[nextPlayerIndex];
       const hand = remainingHands[index];
-      if (!player || !nextPlayer || !hand) {
+      if (!nextPlayer || !hand) {
         throw new Error("Could not rotate player hands.");
       }
 
