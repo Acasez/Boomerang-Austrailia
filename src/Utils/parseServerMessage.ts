@@ -111,6 +111,8 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
         };
       }
       return null;
+    case "gameInactive":
+      return { type: "gameInactive" };
     case "gameStarted":
       if (
         isCardArray(value.hand) &&

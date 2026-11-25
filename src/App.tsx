@@ -65,6 +65,20 @@ export default function App() {
         setActivityProgress(null);
         setGameError(null);
         return;
+      case "gameInactive":
+        setPlayerState({ player: new Player() });
+        setGameStarted(false);
+        setHasHand(false);
+        setGameOver(false);
+        setPlayedRows([]);
+        setTurnNumber(0);
+        setRoundNumber(1);
+        setSelectionProgress(null);
+        setActivityScoring(false);
+        setActivityScored(false);
+        setActivityProgress(null);
+        setGameError(null);
+        return;
       case "gameStarted": {
         const player = new Player();
         player.hand = message.hand;
@@ -208,6 +222,16 @@ export default function App() {
     ws.send(JSON.stringify({ type: "startGame" }));
   };
 
+  const startSoloGame = () => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      setGameError("Connect to the game server before starting.");
+      return;
+    }
+
+    ws.send(JSON.stringify({ type: "startSolo" }));
+  };
+
   const selectCard = (handIndex: number) => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
@@ -258,6 +282,7 @@ export default function App() {
         gameStarted={gameStarted}
         disabled={myId === null}
         onStartGame={startGame}
+        onStartSolo={startSoloGame}
         roundNumber={roundNumber}
       />
       <div className="mx-auto p-3 pt-1 text-center bg-gray-100">

@@ -8,6 +8,7 @@ export interface PlayedCardsRow {
 
 export type ServerMessage =
   | { type: "welcome"; playerId: number; gameStarted: boolean }
+  | { type: "gameInactive" }
   | {
       type: "gameStarted";
       hand: Card[];

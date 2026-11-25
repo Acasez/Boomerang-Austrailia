@@ -44,29 +44,34 @@ export default class Game {
     }
   }
 
-  startGame(): void {
+  startGame(
+    players: Player[] = this.players,
+    allowSolo = false,
+  ): void {
     if (
-      this.players.length < MIN_PLAYERS ||
-      this.players.length > MAX_PLAYERS
+      players.length < (allowSolo ? 1 : MIN_PLAYERS) ||
+      players.length > MAX_PLAYERS
     ) {
       throw new Error(
-        `Cannot start a game with fewer than ${MIN_PLAYERS} or more than ${MAX_PLAYERS} players.`,
+        allowSolo
+          ? `Cannot start a game with more than ${MAX_PLAYERS} players.`
+          : `Cannot start a game with fewer than ${MIN_PLAYERS} or more than ${MAX_PLAYERS} players.`,
       );
     }
 
     const deck = this.shuffleDeck([...cards]);
-    if (deck.length < this.players.length * HAND_SIZE) {
+    if (deck.length < players.length * HAND_SIZE) {
       throw new Error(
-        `Cannot start a game with ${this.players.length} player(s): only ${deck.length} cards are available.`,
+        `Cannot start a game with ${players.length} player(s): only ${deck.length} cards are available.`,
       );
     }
-    for (const player of this.players) {
+    for (const player of players) {
       player.reset();
     }
 
     this.deck = deck;
-    this.setupHands(this.deck);
-    this.activePlayers = [...this.players];
+    this.setupHands(this.deck, players);
+    this.activePlayers = [...players];
     this.turnNumber = 0;
     this.round = 1;
     this.activityScoringComplete = false;

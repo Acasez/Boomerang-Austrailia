@@ -117,9 +117,13 @@ function broadcastResolvedTurn(): void {
   );
 }
 
-function handleStartGame(socket: ServerWebSocket): void {
+function handleStartGame(
+  socket: ServerWebSocket,
+  activePlayers: Player[],
+  allowSolo = false,
+): void {
   try {
-    game.startGame();
+    game.startGame(activePlayers, allowSolo);
   } catch (error) {
     if (!(error instanceof Error)) throw error;
     sendMessage(socket, { type: "error", message: error.message });
@@ -128,6 +132,11 @@ function handleStartGame(socket: ServerWebSocket): void {
 
   const playedRows = getPlayedRows();
   for (const [clientSocket, client] of clients) {
+    if (!game.activePlayers.includes(client.player)) {
+      sendMessage(clientSocket, { type: "gameInactive" });
+      continue;
+    }
+
     sendMessage(clientSocket, {
       type: "gameStarted",
       hand: client.player.hand,
@@ -246,7 +255,13 @@ function handleMessage(
   if (isRecord(request)) {
     switch (request.type) {
       case "startGame":
-        handleStartGame(socket);
+        handleStartGame(
+          socket,
+          Array.from(clients.values(), (connectedClient) => connectedClient.player),
+        );
+        return;
+      case "startSolo":
+        handleStartGame(socket, [client.player], true);
         return;
       case "selectCard":
         handleSelectCard(socket, client, request);
