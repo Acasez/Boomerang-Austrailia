@@ -106,6 +106,8 @@ function broadcastRoundStarted(): void {
       playedRows,
       turnNumber: game.turnNumber,
       round: game.round,
+      passRight: game.passRight,
+      alternatePassDirection: game.alternatePassDirection,
     });
   });
 }
@@ -143,7 +145,21 @@ function handleStartGame(
       playedRows,
       turnNumber: game.turnNumber,
       round: game.round,
+      passRight: game.passRight,
+      alternatePassDirection: game.alternatePassDirection,
     });
+  }
+}
+
+function handleSetAlternatePassDirection(enabled: boolean): void {
+  game.alternatePassDirection = enabled;
+  const message: ServerMessage = {
+    type: "passDirectionUpdated",
+    passRight: game.passRight,
+    alternatePassDirection: game.alternatePassDirection,
+  };
+  for (const socket of clients.keys()) {
+    sendMessage(socket, message);
   }
 }
 
@@ -269,6 +285,16 @@ function handleMessage(
       case "selectActivity":
         handleSelectActivity(socket, client, request);
         return;
+      case "setAlternatePassDirection":
+        if (typeof request.enabled !== "boolean") {
+          sendMessage(socket, {
+            type: "error",
+            message: "The alternate pass direction setting is invalid.",
+          });
+          return;
+        }
+        handleSetAlternatePassDirection(request.enabled);
+        return;
     }
   }
 
@@ -318,6 +344,8 @@ Bun.serve({
         type: "welcome",
         playerId: id,
         gameStarted: game.started,
+        passRight: game.passRight,
+        alternatePassDirection: game.alternatePassDirection,
       });
       console.log(`Player ${id} connected`);
     },

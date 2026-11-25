@@ -28,6 +28,9 @@ export default class Game {
 
   started = false;
 
+  passRight = true;
+  alternatePassDirection = false;
+
   setupHands(deck: Card[], players: Player[] = this.players): void {
     const cardsNeeded = players.length * HAND_SIZE;
 
@@ -44,10 +47,7 @@ export default class Game {
     }
   }
 
-  startGame(
-    players: Player[] = this.players,
-    allowSolo = false,
-  ): void {
+  startGame(players: Player[] = this.players, allowSolo = false): void {
     if (
       players.length < (allowSolo ? 1 : MIN_PLAYERS) ||
       players.length > MAX_PLAYERS
@@ -76,6 +76,7 @@ export default class Game {
     this.round = 1;
     this.activityScoringComplete = false;
     this.claimedRegions = [];
+    this.passRight = true;
     this.started = true;
   }
 
@@ -185,6 +186,10 @@ export default class Game {
 
   private startNextRound(): void {
     this.round++;
+    if (this.alternatePassDirection) {
+      this.passRight = !this.passRight;
+    }
+
     for (const player of this.activePlayers) {
       player.resetRound();
     }
@@ -233,6 +238,10 @@ export default class Game {
     const isFinalCardPass = this.activePlayers.every(
       (player) => player.hand.length === 2,
     );
+    const passDirection = this.passRight ? 1 : -1;
+    const effectivePassDirection = isFinalCardPass
+      ? -passDirection
+      : passDirection;
 
     for (const player of this.activePlayers) {
       const selectedCard = player.selectedCard;
@@ -259,9 +268,9 @@ export default class Game {
     }
 
     for (let index = 0; index < this.activePlayers.length; index++) {
-      const nextPlayerIndex = isFinalCardPass
-        ? (index - 1 + this.activePlayers.length) % this.activePlayers.length
-        : (index + 1) % this.activePlayers.length;
+      const nextPlayerIndex =
+        (index + effectivePassDirection + this.activePlayers.length) %
+        this.activePlayers.length;
       const nextPlayer = this.activePlayers[nextPlayerIndex];
       const hand = remainingHands[index];
       if (!nextPlayer || !hand) {

@@ -7,7 +7,18 @@ export interface PlayedCardsRow {
 }
 
 export type ServerMessage =
-  | { type: "welcome"; playerId: number; gameStarted: boolean }
+  | {
+      type: "welcome";
+      playerId: number;
+      gameStarted: boolean;
+      passRight: boolean;
+      alternatePassDirection: boolean;
+    }
+  | {
+      type: "passDirectionUpdated";
+      passRight: boolean;
+      alternatePassDirection: boolean;
+    }
   | { type: "gameInactive" }
   | {
       type: "gameStarted";
@@ -15,6 +26,8 @@ export type ServerMessage =
       playedRows: PlayedCardsRow[];
       turnNumber: number;
       round: number;
+      passRight: boolean;
+      alternatePassDirection: boolean;
     }
   | {
       type: "roundStarted";
@@ -22,6 +35,8 @@ export type ServerMessage =
       playedRows: PlayedCardsRow[];
       turnNumber: number;
       round: number;
+      passRight: boolean;
+      alternatePassDirection: boolean;
     }
   | { type: "selectionProgress"; readyCount: number; playerCount: number }
   | {

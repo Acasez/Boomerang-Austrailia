@@ -5,6 +5,9 @@ interface HeaderProps {
   disabled: boolean;
   onStartGame: () => void;
   onStartSolo: () => void;
+  passRight: boolean;
+  alternatePassDirection: boolean;
+  onToggleAlternatePassDirection: () => void;
   roundNumber: number;
 }
 
@@ -13,6 +16,9 @@ export default function Header({
   disabled,
   onStartGame,
   onStartSolo,
+  passRight,
+  alternatePassDirection,
+  onToggleAlternatePassDirection,
   roundNumber,
 }: HeaderProps) {
   return (
@@ -39,7 +45,17 @@ export default function Header({
           Round {roundNumber} of {GAME_ROUNDS}
         </h1>
       </div>
-      <div></div>
+      <button
+        type="button"
+        className={`text-white text-lg rounded-lg px-2 m-2 ${
+          alternatePassDirection ? "bg-blue-600" : "bg-gray-600"
+        }`}
+        onClick={onToggleAlternatePassDirection}
+        aria-pressed={alternatePassDirection}
+      >
+        Alternate passing: {alternatePassDirection ? "On" : "Off"} (currently{" "}
+        {passRight ? "right" : "left"})
+      </button>
     </div>
   );
 }

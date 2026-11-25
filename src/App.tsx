@@ -31,6 +31,8 @@ export default function App() {
   }));
   const [gameError, setGameError] = useState<string | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
+  const [passRight, setPassRight] = useState(true);
+  const [alternatePassDirection, setAlternatePassDirection] = useState(false);
   const [hasHand, setHasHand] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [playedRows, setPlayedRows] = useState<PlayedCardsRow[]>([]);
@@ -52,6 +54,8 @@ export default function App() {
       case "welcome":
         myIdRef.current = message.playerId;
         setMyId(message.playerId);
+        setPassRight(message.passRight);
+        setAlternatePassDirection(message.alternatePassDirection);
         setPlayerState({ player: new Player() });
         setGameStarted(message.gameStarted);
         setHasHand(false);
@@ -79,6 +83,10 @@ export default function App() {
         setActivityProgress(null);
         setGameError(null);
         return;
+      case "passDirectionUpdated":
+        setPassRight(message.passRight);
+        setAlternatePassDirection(message.alternatePassDirection);
+        return;
       case "gameStarted": {
         const player = new Player();
         player.hand = message.hand;
@@ -93,6 +101,8 @@ export default function App() {
         setPlayedRows(message.playedRows);
         setTurnNumber(message.turnNumber);
         setRoundNumber(message.round);
+        setPassRight(message.passRight);
+        setAlternatePassDirection(message.alternatePassDirection);
         setSelectionProgress(null);
         setActivityScoring(false);
         setActivityScored(false);
@@ -113,6 +123,8 @@ export default function App() {
         setPlayedRows(message.playedRows);
         setTurnNumber(message.turnNumber);
         setRoundNumber(message.round);
+        setPassRight(message.passRight);
+        setAlternatePassDirection(message.alternatePassDirection);
         setSelectionProgress(null);
         setActivityScoring(false);
         setActivityScored(false);
@@ -232,6 +244,22 @@ export default function App() {
     ws.send(JSON.stringify({ type: "startSolo" }));
   };
 
+  const toggleAlternatePassDirection = () => {
+    const ws = wsRef.current;
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      setGameError("Connect to the game server before changing pass direction.");
+      return;
+    }
+
+    ws.send(
+      JSON.stringify({
+        type: "setAlternatePassDirection",
+        enabled: !alternatePassDirection,
+      }),
+    );
+    setGameError(null);
+  };
+
   const selectCard = (handIndex: number) => {
     const ws = wsRef.current;
     if (!ws || ws.readyState !== WebSocket.OPEN) {
@@ -283,6 +311,9 @@ export default function App() {
         disabled={myId === null}
         onStartGame={startGame}
         onStartSolo={startSoloGame}
+        passRight={passRight}
+        alternatePassDirection={alternatePassDirection}
+        onToggleAlternatePassDirection={toggleAlternatePassDirection}
         roundNumber={roundNumber}
       />
       <div className="mx-auto p-3 pt-1 text-center bg-gray-100">

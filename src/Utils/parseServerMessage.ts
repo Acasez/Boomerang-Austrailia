@@ -102,12 +102,28 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
       if (
         typeof value.playerId === "number" &&
         Number.isInteger(value.playerId) &&
-        typeof value.gameStarted === "boolean"
+        typeof value.gameStarted === "boolean" &&
+        typeof value.passRight === "boolean" &&
+        typeof value.alternatePassDirection === "boolean"
       ) {
         return {
           type: "welcome",
           playerId: value.playerId,
           gameStarted: value.gameStarted,
+          passRight: value.passRight,
+          alternatePassDirection: value.alternatePassDirection,
+        };
+      }
+      return null;
+    case "passDirectionUpdated":
+      if (
+        typeof value.passRight === "boolean" &&
+        typeof value.alternatePassDirection === "boolean"
+      ) {
+        return {
+          type: "passDirectionUpdated",
+          passRight: value.passRight,
+          alternatePassDirection: value.alternatePassDirection,
         };
       }
       return null;
@@ -120,7 +136,9 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
         typeof value.turnNumber === "number" &&
         Number.isInteger(value.turnNumber) &&
         typeof value.round === "number" &&
-        Number.isInteger(value.round)
+        Number.isInteger(value.round) &&
+        typeof value.passRight === "boolean" &&
+        typeof value.alternatePassDirection === "boolean"
       ) {
         return {
           type: "gameStarted",
@@ -128,6 +146,8 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
           playedRows: value.playedRows,
           turnNumber: value.turnNumber,
           round: value.round,
+          passRight: value.passRight,
+          alternatePassDirection: value.alternatePassDirection,
         };
       }
       return null;
@@ -138,7 +158,9 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
         typeof value.turnNumber === "number" &&
         Number.isInteger(value.turnNumber) &&
         typeof value.round === "number" &&
-        Number.isInteger(value.round)
+        Number.isInteger(value.round) &&
+        typeof value.passRight === "boolean" &&
+        typeof value.alternatePassDirection === "boolean"
       ) {
         return {
           type: "roundStarted",
@@ -146,6 +168,8 @@ export function parseServerMessage(value: unknown): ServerMessage | null {
           playedRows: value.playedRows,
           turnNumber: value.turnNumber,
           round: value.round,
+          passRight: value.passRight,
+          alternatePassDirection: value.alternatePassDirection,
         };
       }
       return null;
