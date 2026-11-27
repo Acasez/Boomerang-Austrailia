@@ -20,3 +20,4 @@ It runs game with support for 1-4 players, a test solo mode and a chat window.
 The icon art is done by me, they have tooltips if they are hard to read. 
 <img width="1916" height="889" alt="image" src="https://github.com/user-attachments/assets/a7576fd5-9318-4a31-bc87-ee9d1f650806" />
 <img width="1900" height="965" alt="image" src="https://github.com/user-attachments/assets/90de81b5-aecc-47e4-b419-5448cdf02311" />
+<img width="1901" height="967" alt="image" src="https://github.com/user-attachments/assets/f937b840-f89a-4427-9e18-cd54eec619f2" />
